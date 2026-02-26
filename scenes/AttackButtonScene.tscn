@@ -1,0 +1,169 @@
+[gd_scene load_steps=11 format=3 uid="uid://dp26kh3fg7tlx"]
+
+[ext_resource type="Script" uid="uid://ck5anflw40itu" path="res://scenes/attack_button_scene.gd" id="2_3ohf2"]
+[ext_resource type="FontFile" uid="uid://b477vgsbu4t3l" path="res://fonts/OptimusPrincepsSemiBold.ttf" id="2_nhcg2"]
+[ext_resource type="StyleBox" uid="uid://iong458yhfhw" path="res://themes/AttackButtonPanel.tres" id="2_usi3c"]
+[ext_resource type="Texture2D" uid="uid://7j0gu4fshpj4" path="res://sprites/potion.png" id="3_dp8n4"]
+[ext_resource type="Texture2D" uid="uid://bdj070bf4dgjw" path="res://sprites/arrow.png" id="5_0qbpi"]
+[ext_resource type="Texture2D" uid="uid://c7apyeoee6n4b" path="res://sprites/heart.png" id="6_usi3c"]
+[ext_resource type="Texture2D" uid="uid://b8gdxwg7d4hwb" path="res://sprites/skull.png" id="7_0qbpi"]
+[ext_resource type="Texture2D" uid="uid://rixeffuydcb4" path="res://sprites/sword.png" id="7_2op74"]
+[ext_resource type="Texture2D" uid="uid://c8p1g8qcp2jms" path="res://sprites/fist.png" id="8_0qbpi"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_5dc3t"]
+font = ExtResource("2_nhcg2")
+font_size = 48
+font_color = Color(0.894118, 0.156863, 0.2, 1)
+
+[node name="AttackButtonScene" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 318.0
+offset_bottom = 77.0
+script = ExtResource("2_3ohf2")
+
+[node name="FirstOption" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 279.0
+offset_bottom = 77.0
+theme_override_styles/panel = ExtResource("2_usi3c")
+
+[node name="FirstAmount" type="Label" parent="FirstOption"]
+layout_mode = 0
+offset_left = 188.0
+offset_top = 5.0
+offset_right = 251.0
+offset_bottom = 76.0
+text = "+3"
+label_settings = SubResource("LabelSettings_5dc3t")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="FirstOption"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 235.0
+offset_bottom = 75.0
+theme_override_constants/separation = -17
+
+[node name="First" type="TextureRect" parent="FirstOption/HBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("3_dp8n4")
+
+[node name="Arrow" type="TextureRect" parent="FirstOption/HBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(91, 9)
+layout_mode = 2
+texture = ExtResource("5_0qbpi")
+
+[node name="Second" type="TextureRect" parent="FirstOption/HBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(65, 64)
+layout_mode = 2
+texture = ExtResource("6_usi3c")
+
+[node name="SingleIcon" type="TextureRect" parent="FirstOption"]
+visible = false
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -39.0
+offset_top = -32.0
+offset_right = 25.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_2op74")
+
+[node name="FirstSkull" type="TextureRect" parent="FirstOption"]
+visible = false
+texture_filter = 1
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+offset_left = 283.0
+offset_top = 2.0
+offset_right = 347.0
+offset_bottom = 75.0
+texture = ExtResource("7_0qbpi")
+
+[node name="DisableRect" type="ColorRect" parent="FirstOption"]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 277.0
+offset_bottom = 75.0
+color = Color(0.23, 0.23, 0.23, 0.592157)
+
+[node name="SecondOption" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_top = 89.0
+offset_right = 279.0
+offset_bottom = 166.0
+theme_override_styles/panel = ExtResource("2_usi3c")
+
+[node name="SecondAmount" type="Label" parent="SecondOption"]
+layout_mode = 0
+offset_left = 191.0
+offset_top = 4.0
+offset_right = 251.0
+offset_bottom = 75.0
+text = "+3"
+label_settings = SubResource("LabelSettings_5dc3t")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SecondOption"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 235.0
+offset_bottom = 75.0
+theme_override_constants/separation = -17
+
+[node name="First" type="TextureRect" parent="SecondOption/HBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("8_0qbpi")
+
+[node name="Arrow" type="TextureRect" parent="SecondOption/HBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(91, 9)
+layout_mode = 2
+texture = ExtResource("5_0qbpi")
+
+[node name="Second" type="TextureRect" parent="SecondOption/HBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(65, 64)
+layout_mode = 2
+texture = ExtResource("6_usi3c")
+
+[node name="SecondSkull" type="TextureRect" parent="SecondOption"]
+visible = false
+texture_filter = 1
+custom_minimum_size = Vector2(64, 64)
+offset_left = 283.0
+offset_top = 2.0
+offset_right = 347.0
+offset_bottom = 75.0
+texture = ExtResource("7_0qbpi")
+
+[node name="SecondDisableRect" type="ColorRect" parent="SecondOption"]
+visible = false
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 277.0
+offset_bottom = 75.0
+color = Color(0.23, 0.23, 0.23, 0.592157)
+
+[connection signal="gui_input" from="FirstOption" to="." method="_on_first_option_gui_input"]
+[connection signal="gui_input" from="SecondOption" to="." method="_on_second_option_gui_input"]

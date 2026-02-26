@@ -1,0 +1,138 @@
+[gd_scene load_steps=10 format=3 uid="uid://cafaeua3q5u4k"]
+
+[ext_resource type="Script" uid="uid://ctinpnkkwpm35" path="res://scenes/game_scene.gd" id="1_xy3my"]
+[ext_resource type="Texture2D" uid="uid://d4mkbag45h4k1" path="res://sprites/bg.png" id="2_6ytau"]
+[ext_resource type="PackedScene" uid="uid://b05w2ej50rtaj" path="res://scenes/RoomScene.tscn" id="2_cxv17"]
+[ext_resource type="StyleBox" uid="uid://dj47o651rk7oq" path="res://themes/RoomScene.tres" id="3_cxv17"]
+[ext_resource type="FontFile" uid="uid://b477vgsbu4t3l" path="res://fonts/OptimusPrincepsSemiBold.ttf" id="4_18ig4"]
+[ext_resource type="PackedScene" uid="uid://duwo347mx2jgj" path="res://scenes/GameOverScene.tscn" id="6_xs4ih"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7s5hy"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_xs4ih"]
+load_path = "res://.godot/imported/deck.png-2517bf0d4854379f0e50a84d659d8f14.ctex"
+
+[sub_resource type="LabelSettings" id="LabelSettings_7s5hy"]
+font = ExtResource("4_18ig4")
+font_size = 48
+
+[node name="GameScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xy3my")
+
+[node name="Bg" type="Sprite2D" parent="."]
+position = Vector2(642.661, 1309.5)
+scale = Vector2(0.834195, 2.55762)
+texture = ExtResource("2_6ytau")
+
+[node name="RoomScene" parent="." instance=ExtResource("2_cxv17")]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.0
+offset_left = 6.0
+offset_top = 687.0
+offset_bottom = 687.0
+grow_vertical = 1
+
+[node name="HeldCard" type="Panel" parent="."]
+custom_minimum_size = Vector2(187, 262)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 101.0
+offset_top = -475.0
+offset_right = 288.0
+offset_bottom = -213.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_7s5hy")
+
+[node name="DiscardPile" type="Panel" parent="."]
+custom_minimum_size = Vector2(187, 262)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -275.0
+offset_top = -475.0
+offset_right = -88.0
+offset_bottom = -213.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = ExtResource("3_cxv17")
+
+[node name="Deck" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(187, 262)
+layout_mode = 0
+offset_left = 98.0
+offset_top = 230.0
+offset_right = 285.0
+offset_bottom = 492.0
+texture = SubResource("CompressedTexture2D_xs4ih")
+
+[node name="FleeButton" type="Button" parent="."]
+custom_minimum_size = Vector2(175, 100)
+layout_mode = 0
+offset_left = 863.0
+offset_top = 81.0
+offset_right = 1038.0
+offset_bottom = 181.0
+theme_override_fonts/font = ExtResource("4_18ig4")
+theme_override_font_sizes/font_size = 64
+text = "Flee"
+
+[node name="HealthPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 97.0
+offset_top = 152.0
+offset_right = 677.0
+offset_bottom = 205.0
+theme_override_styles/panel = ExtResource("3_cxv17")
+
+[node name="HealthRect" type="ColorRect" parent="HealthPanel"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 578.0
+offset_bottom = 51.0
+color = Color(0.701961, 0.121569, 0.156863, 1)
+
+[node name="HealthLabel" type="Label" parent="HealthPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -286.0
+offset_top = -26.5
+offset_right = 287.0
+offset_bottom = 26.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "20 / 20"
+label_settings = SubResource("LabelSettings_7s5hy")
+horizontal_alignment = 1
+
+[node name="GameOverScene" parent="." instance=ExtResource("6_xs4ih")]
+visible = false
+layout_mode = 1
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="gui_input" from="HeldCard" to="." method="_on_held_card_gui_input"]
+[connection signal="pressed" from="FleeButton" to="." method="_on_flee_button_pressed"]

@@ -1,0 +1,51 @@
+[gd_scene load_steps=3 format=3 uid="uid://b05w2ej50rtaj"]
+
+[ext_resource type="Script" uid="uid://bp60271ermrck" path="res://scenes/room_scene.gd" id="1_o66vl"]
+[ext_resource type="StyleBox" uid="uid://dj47o651rk7oq" path="res://themes/RoomScene.tres" id="2_iaxv0"]
+
+[node name="RoomScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 6.0
+offset_bottom = -1658.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_o66vl")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 262)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -446.0
+offset_top = -131.0
+offset_right = 446.0
+offset_bottom = 131.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 48
+
+[node name="Card1" type="Panel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(187, 261)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_iaxv0")
+
+[node name="Card2" type="Panel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(187, 262)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_iaxv0")
+
+[node name="Card3" type="Panel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(187, 262)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_iaxv0")
+
+[node name="Card4" type="Panel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(187, 262)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_iaxv0")

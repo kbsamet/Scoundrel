@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bnhi8exunx7jl"]
+
+[node name="AttackButtonsMenu" type="VBoxContainer"]
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 2
