@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://dp26kh3fg7tlx"]
+
+[ext_resource type="Script" uid="uid://ck5anflw40itu" path="res://scenes/Components/attack_button_scene.gd" id="1_ymupu"]
+[ext_resource type="PackedScene" uid="uid://cefavx5cghdwt" path="res://scenes/Components/AttackOptionScene.tscn" id="2_l1u0m"]
+
+[node name="AttackButtonScene" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 318.0
+offset_bottom = 77.0
+script = ExtResource("1_ymupu")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="FirstOption" parent="VBoxContainer" instance=ExtResource("2_l1u0m")]
+layout_mode = 2
+
+[node name="SecondOption" parent="VBoxContainer" instance=ExtResource("2_l1u0m")]
+visible = false
+layout_mode = 2

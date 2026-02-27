@@ -1,12 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://duwo347mx2jgj"]
+[gd_scene load_steps=6 format=3 uid="uid://duwo347mx2jgj"]
 
-[ext_resource type="Script" uid="uid://dtgb60r0v1ook" path="res://scenes/game_over_scene.gd" id="1_7kyk7"]
+[ext_resource type="Script" uid="uid://dtgb60r0v1ook" path="res://scenes/Components/game_over_scene.gd" id="1_7kyk7"]
 [ext_resource type="FontFile" uid="uid://b477vgsbu4t3l" path="res://fonts/OptimusPrincepsSemiBold.ttf" id="2_tgqjs"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1ubts"]
 font = ExtResource("2_tgqjs")
 font_size = 128
 font_color = Color(1, 0.16, 0.16, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_4vbkl"]
+font = ExtResource("2_tgqjs")
+font_size = 48
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4vbkl"]
+bg_color = Color(0.32, 0.32, 0.32, 1)
 
 [node name="GameOverScene" type="Control"]
 layout_mode = 3
@@ -21,7 +28,7 @@ script = ExtResource("1_7kyk7")
 layout_mode = 0
 offset_right = 1088.0
 offset_bottom = 2424.0
-color = Color(0.21, 0.21, 0.21, 0.709804)
+color = Color(0, 0, 0, 0.792157)
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 1
@@ -31,13 +38,32 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -355.0
-offset_top = -273.0
+offset_top = -422.0
 offset_right = 367.0
-offset_bottom = -131.667
+offset_bottom = -280.667
 grow_horizontal = 2
 grow_vertical = 2
 text = "Game Over"
 label_settings = SubResource("LabelSettings_1ubts")
+
+[node name="ScoreLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -357.0
+offset_top = -275.0
+offset_right = 365.0
+offset_bottom = -133.667
+grow_horizontal = 2
+grow_vertical = 2
+text = "Your Score was: 1093
+High score : 1200"
+label_settings = SubResource("LabelSettings_4vbkl")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1
@@ -54,6 +80,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("2_tgqjs")
 theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxFlat_4vbkl")
 text = "Restart"
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ma72ckxacer7"]
 
-[ext_resource type="Script" uid="uid://chycuvb1dcy4g" path="res://scenes/card_scene.gd" id="1_q5au7"]
+[ext_resource type="Script" uid="uid://chycuvb1dcy4g" path="res://scenes/Components/card_scene.gd" id="1_rc6rx"]
 
 [node name="CardScene" type="TextureRect"]
 custom_minimum_size = Vector2(187, 262)
@@ -14,6 +14,6 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(93.5, 131)
 expand_mode = 3
-script = ExtResource("1_q5au7")
+script = ExtResource("1_rc6rx")
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]

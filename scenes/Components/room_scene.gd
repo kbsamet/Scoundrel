@@ -2,7 +2,7 @@ extends Control
 class_name RoomScene
 
 @onready var card_slots : Array[Panel] = [$HBoxContainer/Card1,$HBoxContainer/Card2,$HBoxContainer/Card3,$HBoxContainer/Card4]
-const CardSceneScene := preload("res://scenes/CardScene.tscn")
+const CardSceneScene := preload("res://scenes/Components/CardScene.tscn")
 var discard_pile : Panel
 var deck_position : Vector2
 

@@ -1,7 +1,7 @@
 extends Control
 @onready var room_scene: RoomScene = $RoomScene
 @onready var held_card: Panel = $HeldCard
-const CardSceneScene := preload("res://scenes/CardScene.tscn")
+const CardSceneScene := preload("res://scenes/Components/CardScene.tscn")
 @onready var health_panel: Panel = $HealthPanel
 @onready var health_label: Label = $HealthPanel/HealthLabel
 @onready var health_rect: ColorRect = $HealthPanel/HealthRect
@@ -12,13 +12,15 @@ const CardSceneScene := preload("res://scenes/CardScene.tscn")
 @onready var discard_pile: Panel = $DiscardPile
 @onready var fist_select: Panel = $FistSelect
 
-const attack_button_scene = preload("res://scenes/AttackButtonScene.tscn")
+const attack_button_scene = preload("res://scenes/Components/AttackButtonScene.tscn")
 var selected_card := -1
 
 func _ready() -> void:
 	Game.reset()
 	room_scene.discard_pile = discard_pile
 	room_scene.deck_position = deck.global_position
+	for i in range(32):
+		Game.deck.pop_back()
 	await get_tree().create_timer(1.0).timeout
 	for i in range(4):
 		var card := Game.draw_card()
@@ -87,10 +89,15 @@ func make_card_move(id : int, secondary_attack : bool = false) -> void:
 	Game.flee_available = false
 	flee_button.disabled = true
 	if room_scene.get_card_count() == 1:
-		var won := fill_room()
-		if won:
+		fill_room()
+		if Game.deck.size() == 0:
+			deck.visible = false
+			for i in range(4):
+				if room_scene.get_card(i) != null:
+					await room_scene.remove_card(i)
+			
 			game_over_scene.visible = true
-			game_over_scene.set_game_won()
+			game_over_scene.set_data(true,Game.calculate_score(true))
 	
 func remove_attack_button(id:int) -> void:
 	if room_scene.card_slots[id].get_child_count() == 0:
@@ -219,6 +226,7 @@ func update_health() -> void:
 	
 	if Game.health <= 0:
 		game_over_scene.visible = true
+		game_over_scene.set_data(false,Game.calculate_score(false))
 		return
 func _on_flee_button_pressed() -> void:
 	if Game.flee_available:

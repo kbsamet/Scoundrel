@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b05w2ej50rtaj"]
 
-[ext_resource type="Script" uid="uid://bp60271ermrck" path="res://scenes/room_scene.gd" id="1_o66vl"]
+[ext_resource type="Script" uid="uid://bp60271ermrck" path="res://scenes/Components/room_scene.gd" id="1_o66vl"]
 [ext_resource type="StyleBox" uid="uid://dj47o651rk7oq" path="res://themes/RoomScene.tres" id="2_iaxv0"]
 
 [node name="RoomScene" type="Control"]
