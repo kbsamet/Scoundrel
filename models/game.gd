@@ -1,4 +1,5 @@
 extends Node
+const MAX_DECK_COUNT = 44
 
 var health := 20
 var deck : Array[Card] = []
@@ -7,6 +8,12 @@ var held_weapon_max_dmg := INF
 var held_weapon_monster_amt := 0
 var fist_selected := true
 var high_score := SaveManager.load_score()
+var game_state := GameState.ANIMATING
+
+enum GameState {ANIMATING,PLAYING}
+
+func set_state(state : GameState) -> void:
+	game_state = state
 
 func reset() -> void:
 	health = 20
@@ -15,6 +22,7 @@ func reset() -> void:
 	fist_selected = true
 	held_weapon_max_dmg = INF
 	held_weapon_monster_amt = 0
+	game_state = GameState.ANIMATING
 	high_score = SaveManager.load_score()
 	for i in range(2,15):
 		for k in range(0,4):

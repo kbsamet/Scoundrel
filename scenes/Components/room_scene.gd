@@ -42,7 +42,10 @@ func remove_card(slot: int, animated : bool = true) -> Card:
 	tween.tween_property(card_scene, "global_position", discard_pile.global_position, 0.4)\
 		.set_trans(Tween.TRANS_CUBIC)\
 		.set_ease(Tween.EASE_IN_OUT)
+		
+	Game.set_state(Game.GameState.ANIMATING)
 	await tween.finished
+	Game.set_state(Game.GameState.PLAYING)
 	for n in discard_pile.get_children():
 		if n == card_scene:
 			continue
@@ -68,7 +71,10 @@ func move_card_to_back_of_deck(slot:int) -> Card:
 	tween.tween_property(card_scene, "global_position", deck_position, 0.4)\
 		.set_trans(Tween.TRANS_CUBIC)\
 		.set_ease(Tween.EASE_IN_OUT)
+		
+	Game.set_state(Game.GameState.ANIMATING)
 	await tween.finished
+	Game.set_state(Game.GameState.PLAYING)
 	
 	card_slots[slot].remove_child(card_scene)
 	card_scene.queue_free()

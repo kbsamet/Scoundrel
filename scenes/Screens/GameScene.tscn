@@ -1,11 +1,33 @@
-[gd_scene load_steps=10 format=3 uid="uid://cafaeua3q5u4k"]
+[gd_scene load_steps=24 format=3 uid="uid://cafaeua3q5u4k"]
 
 [ext_resource type="Script" uid="uid://ctinpnkkwpm35" path="res://scenes/Screens/game_scene.gd" id="1_ax3qu"]
-[ext_resource type="Texture2D" uid="uid://d4mkbag45h4k1" path="res://sprites/bg.png" id="2_hqe0l"]
+[ext_resource type="Texture2D" uid="uid://d21u3jweb48bc" path="res://sprites/wood.jpg" id="2_ax3qu"]
+[ext_resource type="Shader" uid="uid://dq0ismthqwwew" path="res://scenes/Screens/Wood.gdshader" id="2_hqe0l"]
 [ext_resource type="PackedScene" uid="uid://b05w2ej50rtaj" path="res://scenes/Components/RoomScene.tscn" id="3_tlyhp"]
 [ext_resource type="StyleBox" uid="uid://dj47o651rk7oq" path="res://themes/RoomScene.tres" id="4_yd5jp"]
 [ext_resource type="FontFile" uid="uid://b477vgsbu4t3l" path="res://fonts/OptimusPrincepsSemiBold.ttf" id="5_8x11w"]
 [ext_resource type="PackedScene" uid="uid://duwo347mx2jgj" path="res://scenes/Components/GameOverScene.tscn" id="6_4p2y1"]
+[ext_resource type="Shader" uid="uid://cxsacqu5a14up" path="res://scenes/Screens/BGShader.gdshader" id="6_gr1j8"]
+[ext_resource type="AudioStream" uid="uid://dtrw45x7wok2x" path="res://sfx/punch.mp3" id="8_tlyhp"]
+[ext_resource type="AudioStream" uid="uid://c86rkybd7cxtr" path="res://sfx/slash.mp3" id="9_yd5jp"]
+[ext_resource type="AudioStream" uid="uid://dvi6yr1ys6mxg" path="res://sfx/equip.mp3" id="10_8x11w"]
+[ext_resource type="AudioStream" uid="uid://ckdue3t181ihh" path="res://sfx/drink.mp3" id="11_4p2y1"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tlyhp"]
+shader = ExtResource("2_hqe0l")
+shader_parameter/vignette_strength = 2.894
+shader_parameter/brightness = 0.8
+shader_parameter/tint = Color(0.407843, 0.0588235, 0.0627451, 1)
+shader_parameter/tint_amount = 0.3
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_tlyhp"]
+load_path = "res://.godot/imported/run.png-a07df8d43dc047a389913436b06317c3.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ax3qu"]
+load_path = "res://.godot/imported/run_clicked.png-346fa7ae98ca4fb8406c3f5a85b293e2.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_hqe0l"]
+load_path = "res://.godot/imported/run_disabled.png-77c0a113fb651d227ad42f2cf2cd38a2.ctex"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7s5hy"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -17,6 +39,27 @@ border_color = Color(1, 1, 1, 1)
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_xs4ih"]
 load_path = "res://.godot/imported/deck.png-2517bf0d4854379f0e50a84d659d8f14.ctex"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_llxvm"]
+shader = ExtResource("6_gr1j8")
+shader_parameter/speed = 0.1
+
+[sub_resource type="Gradient" id="Gradient_4p2y1"]
+colors = PackedColorArray(0, 0, 0, 0.709804, 1, 1, 1, 0)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_gr1j8"]
+noise_type = 4
+seed = 7
+frequency = 0.0064
+fractal_type = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_llxvm"]
+width = 886
+height = 108
+seamless = true
+seamless_blend_skirt = 0.77
+color_ramp = SubResource("Gradient_4p2y1")
+noise = SubResource("FastNoiseLite_gr1j8")
 
 [sub_resource type="LabelSettings" id="LabelSettings_7s5hy"]
 font = ExtResource("5_8x11w")
@@ -32,9 +75,11 @@ grow_vertical = 2
 script = ExtResource("1_ax3qu")
 
 [node name="Bg" type="Sprite2D" parent="."]
-position = Vector2(642.661, 1309.5)
-scale = Vector2(0.834195, 2.55762)
-texture = ExtResource("2_hqe0l")
+modulate = Color(0.521569, 0.227451, 0.231373, 1)
+material = SubResource("ShaderMaterial_tlyhp")
+position = Vector2(574.656, 1201.1)
+scale = Vector2(0.686538, 0.756462)
+texture = ExtResource("2_ax3qu")
 
 [node name="RoomScene" parent="." instance=ExtResource("3_tlyhp")]
 layout_mode = 1
@@ -42,11 +87,30 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.0
-offset_left = 6.0
-offset_top = 687.0
-offset_right = 3.0
-offset_bottom = 687.0
+offset_left = 4.5
+offset_top = 795.0
+offset_right = 4.5
+offset_bottom = 795.0
 grow_vertical = 1
+
+[node name="FleeButton" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -56.0
+offset_top = -475.0
+offset_right = 90.0
+offset_bottom = -329.0
+grow_horizontal = 2
+grow_vertical = 0
+texture_normal = SubResource("CompressedTexture2D_tlyhp")
+texture_pressed = SubResource("CompressedTexture2D_ax3qu")
+texture_disabled = SubResource("CompressedTexture2D_hqe0l")
+ignore_texture_size = true
+stretch_mode = 4
 
 [node name="HeldCard" type="Panel" parent="."]
 custom_minimum_size = Vector2(187, 262)
@@ -78,40 +142,97 @@ grow_vertical = 0
 theme_override_styles/panel = ExtResource("4_yd5jp")
 
 [node name="Deck" type="TextureRect" parent="."]
+z_index = 3
 custom_minimum_size = Vector2(187, 262)
 layout_mode = 0
 offset_left = 98.0
-offset_top = 230.0
+offset_top = 372.0
 offset_right = 285.0
-offset_bottom = 492.0
+offset_bottom = 634.0
 texture = SubResource("CompressedTexture2D_xs4ih")
 
-[node name="FleeButton" type="Button" parent="."]
-custom_minimum_size = Vector2(175, 100)
+[node name="Deck2" type="TextureRect" parent="Deck"]
+custom_minimum_size = Vector2(187, 262)
 layout_mode = 0
-offset_left = 863.0
-offset_top = 81.0
-offset_right = 1038.0
-offset_bottom = 181.0
-theme_override_fonts/font = ExtResource("5_8x11w")
-theme_override_font_sizes/font_size = 64
-text = "Flee"
+offset_top = -9.0
+offset_right = 187.0
+offset_bottom = 253.0
+texture = SubResource("CompressedTexture2D_xs4ih")
+
+[node name="Deck3" type="TextureRect" parent="Deck"]
+custom_minimum_size = Vector2(187, 262)
+layout_mode = 0
+offset_top = -18.0
+offset_right = 187.0
+offset_bottom = 244.0
+texture = SubResource("CompressedTexture2D_xs4ih")
+
+[node name="Deck4" type="TextureRect" parent="Deck"]
+custom_minimum_size = Vector2(187, 262)
+layout_mode = 0
+offset_top = -27.0
+offset_right = 187.0
+offset_bottom = 235.0
+texture = SubResource("CompressedTexture2D_xs4ih")
+
+[node name="Deck5" type="TextureRect" parent="Deck"]
+custom_minimum_size = Vector2(187, 262)
+layout_mode = 0
+offset_top = -36.0
+offset_right = 187.0
+offset_bottom = 226.0
+texture = SubResource("CompressedTexture2D_xs4ih")
 
 [node name="HealthPanel" type="Panel" parent="."]
 layout_mode = 0
 offset_left = 97.0
 offset_top = 152.0
-offset_right = 677.0
-offset_bottom = 205.0
+offset_right = 991.0
+offset_bottom = 268.0
 theme_override_styles/panel = ExtResource("4_yd5jp")
 
 [node name="HealthRect" type="ColorRect" parent="HealthPanel"]
-layout_mode = 0
-offset_left = 2.0
-offset_top = 2.0
-offset_right = 578.0
-offset_bottom = 51.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0.701961, 0.121569, 0.156863, 1)
+
+[node name="GhostRect" type="ColorRect" parent="HealthPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -890.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.93, 0.2976, 0.32922, 1)
+
+[node name="TextureContainer" type="Control" parent="HealthPanel"]
+clip_children = 2
+clip_contents = true
+anchors_preset = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 890.0
+offset_bottom = 112.0
+
+[node name="TextureRect" type="TextureRect" parent="HealthPanel/TextureContainer"]
+material = SubResource("ShaderMaterial_llxvm")
+layout_mode = 2
+offset_right = 886.0
+offset_bottom = 108.0
+texture = SubResource("NoiseTexture2D_llxvm")
+stretch_mode = 2
 
 [node name="HealthLabel" type="Label" parent="HealthPanel"]
 layout_mode = 1
@@ -134,6 +255,19 @@ horizontal_alignment = 1
 visible = false
 layout_mode = 1
 
+[node name="PunchPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_tlyhp")
+
+[node name="SlashPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_yd5jp")
+
+[node name="equipPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_8x11w")
+
+[node name="DrinkPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_4p2y1")
+volume_db = -6.724
+
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
-[connection signal="gui_input" from="HeldCard" to="." method="_on_held_card_gui_input"]
 [connection signal="pressed" from="FleeButton" to="." method="_on_flee_button_pressed"]
+[connection signal="gui_input" from="HeldCard" to="." method="_on_held_card_gui_input"]

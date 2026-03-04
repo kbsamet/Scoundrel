@@ -1,19 +1,36 @@
-[gd_scene load_steps=2 format=3 uid="uid://ma72ckxacer7"]
+[gd_scene load_steps=6 format=3 uid="uid://ma72ckxacer7"]
 
+[ext_resource type="Shader" uid="uid://cme5vh63i1jxh" path="res://scenes/Components/Card.gdshader" id="1_pqqbv"]
 [ext_resource type="Script" uid="uid://chycuvb1dcy4g" path="res://scenes/Components/card_scene.gd" id="1_rc6rx"]
+[ext_resource type="AudioStream" uid="uid://bkcl44dh0vwx5" path="res://sfx/card_deal.mp3" id="2_books"]
+[ext_resource type="Texture2D" uid="uid://cqw7e45dgg0mc" path="res://sprites/deck.png" id="2_tkc6o"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7jvku"]
+shader = ExtResource("1_pqqbv")
+shader_parameter/has_card_above = false
+shader_parameter/shadow_intensity = 0.278
+shader_parameter/corner_radius = 8.0
+shader_parameter/shadow_offset = Vector2(15, 15)
+shader_parameter/rect_size = Vector2(188, 262)
+shader_parameter/uv_rect = Vector4(0, 0, 0, 0)
 
 [node name="CardScene" type="TextureRect"]
+material = SubResource("ShaderMaterial_7jvku")
 custom_minimum_size = Vector2(187, 262)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 1.0
-offset_right = -893.0
-offset_bottom = -1657.0
+offset_right = -891.595
+offset_bottom = -1658.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(93.5, 131)
+texture = ExtResource("2_tkc6o")
 expand_mode = 3
 script = ExtResource("1_rc6rx")
+
+[node name="CardAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_books")
+volume_db = -15.69
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
