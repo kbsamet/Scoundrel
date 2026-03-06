@@ -7,10 +7,13 @@ const CardSceneScene := preload("res://scenes/Components/CardScene.tscn")
 @onready var health_rect: ColorRect = $HealthPanel/HealthRect
 @onready var game_over_scene: GameOverScene = $GameOverScene
 @onready var ghost_rect: ColorRect = $HealthPanel/GhostRect
+@onready var disabled_panel: Panel = $FleeButton/DisabledPanel
 @onready var texture_container: Control = $HealthPanel/TextureContainer
+@onready var flee_tooltip: Tooltip = $FleeButton/FleeTooltip
+@onready var deck_tooltip: Tooltip = $Deck/DeckTooltip
 
 @onready var deck: TextureRect = $Deck
-@onready var flee_button: TextureButton = $FleeButton
+@onready var flee_button: Button = $FleeButton
 @onready var discard_pile: Panel = $DiscardPile
 
 @onready var punch_player: AudioStreamPlayer = $PunchPlayer
@@ -23,32 +26,70 @@ var selected_card := -1
 
 func _ready() -> void:
 	Game.reset()
+	set_flee_disabled(false)
 	room_scene.discard_pile = discard_pile
 	room_scene.deck_position = deck.global_position
+	set_flee_button_panels()
+	if !SaveManager.has_seen_tutorial():
+		TutorialManager.start(self)
+		TutorialManager.step_completed.connect(_on_tutorial_step)
+		set_flee_disabled(true)
 	await get_tree().create_timer(1.0).timeout
 	for i in range(4):
 		var card := Game.draw_card()
 		await animate_draw_to_slot(i, card)
-
+	if TutorialManager.is_active():
+		_on_tutorial_step()
+	
+func _on_tutorial_step() -> void:
+	match TutorialManager.current_step:
+		TutorialManager.Step.POTION:
+			room_scene.card_slots[1].get_child(0).show_tutorial_tip("Hearts are healing potions.\nTap to restore health")
+		TutorialManager.Step.MONSTER_BARE:
+			room_scene.card_slots[0].get_child(0).show_tutorial_tip("Clubs and Spades are monsters.\nTap and attack with your fists.")
+		TutorialManager.Step.ROOM_CLEAR:
+			room_scene.card_slots[2].get_child(0).show_tutorial_tip("Move on to the next room when there is only 1 card left.\nTap and attack to move on.")
+		TutorialManager.Step.WEAPON_EQUIP:
+			room_scene.card_slots[0].get_child(0).show_tutorial_tip("Diamonds are weapons.\nThey reduce monster damage.\nTap and equip.")
+		TutorialManager.Step.MONSTER_WEAPON:
+			room_scene.card_slots[1].get_child(0).show_tutorial_tip("Use your weapon to kill this monster.\nTap and select weapon.")
+		TutorialManager.Step.WEAPON_DEGRADED:
+			held_card.get_child(0).show_tutorial_tip("Weapon can't hit monsters\n stronger than its last kill.")
+			room_scene.card_slots[2].get_child(0).show_tutorial_tip("You can still use your fists to kill it.\nTap and select fists.")
+		TutorialManager.Step.FLEE:
+			flee_tooltip.show_tip("Too dangerous? Flee the room.\nYou can't flee two rooms in a row.")
+			set_flee_disabled(false)
+		TutorialManager.Step.DONE:
+			deck_tooltip.show_tip("Defeat all the cards in the deck to win.\nGood luck.")
+			
 
 func card_clicked(id : int) -> void:
+	if TutorialManager.is_active() and id != TutorialManager.current_step % 3:
+		return
 	if selected_card == id:
 		selected_card = -1
-		remove_attack_button(id)
+		await remove_attack_button(id)
 		return
 	elif selected_card != -1:
-		remove_attack_button(selected_card)
+		await remove_attack_button(selected_card)
 	if room_scene.card_slots[id].get_child_count() == 0:
 		return
-
+	
 	set_attack_button(id)
 	selected_card = id
 
 
 func make_card_move(id : int, secondary_attack : bool = false) -> void:
-	
+	if TutorialManager.is_active() || TutorialManager.current_step == TutorialManager.Step.DONE:
+		for i in range(4):
+			if room_scene.card_slots[i].get_child_count() == 0:
+				continue
+			room_scene.card_slots[i].get_child(0).hide_tutorial_tip()
+			if held_card.get_child_count() != 0:
+				held_card.get_child(0).hide_tutorial_tip()
+		deck_tooltip.hide_tip()
 	if selected_card != -1:
-		remove_attack_button(selected_card)
+		await remove_attack_button(selected_card)
 		selected_card = -1
 	var id_card : Card = room_scene.get_card(id)
 	if id_card.type == Card.card_type.WEAPON:
@@ -94,7 +135,7 @@ func make_card_move(id : int, secondary_attack : bool = false) -> void:
 	
 	
 	Game.flee_available = false
-	flee_button.disabled = true
+	set_flee_disabled(true)
 	if room_scene.get_card_count() == 1:
 		fill_room()
 		if Game.deck.size() == 0:
@@ -105,26 +146,43 @@ func make_card_move(id : int, secondary_attack : bool = false) -> void:
 			
 			game_over_scene.visible = true
 			game_over_scene.set_data(true,Game.calculate_score(true))
-	
+	if TutorialManager.is_active():
+		TutorialManager.advance(TutorialManager.current_step + 1)
+
 func remove_attack_button(id:int) -> void:
 	if room_scene.card_slots[id].get_child_count() == 0:
 		return
 	var card_scene : CardScene = room_scene.card_slots[id].get_child(0)
-	var tween := create_tween()
+	var tween := create_tween().set_parallel()
+	tween.tween_method(
+			func(v: float) -> void: card_scene.material.set_shader_parameter("glow_strength", v),
+			0.3,
+			0.0,
+			0.1
+		)
 	tween.tween_property(card_scene,"scale",Vector2(1,1),0.1) \
 		.set_trans(Tween.TRANS_CUBIC)\
 		.set_ease(Tween.EASE_OUT)
 	Game.set_state(Game.GameState.ANIMATING)
-	tween.tween_callback(func() ->void : Game.set_state(Game.GameState.PLAYING))
+	await tween.finished
+	Game.set_state(Game.GameState.PLAYING)
 	
 	for child in card_scene.get_children():
+		if child is Tooltip:
+			continue
 		card_scene.remove_child(child)
 
 func set_attack_button(id : int) -> void:
 	var card := room_scene.get_card(id)
 	if card != null:
 		var card_scene : CardScene = room_scene.card_slots[id].get_child(0)
-		var tween := create_tween()
+		var tween := create_tween().set_parallel()
+		tween.tween_method(
+			func(v: float) -> void: card_scene.material.set_shader_parameter("glow_strength", v),
+			0.0,
+			0.3,
+			0.2
+		)
 		tween.tween_property(card_scene,"scale",Vector2(1.2,1.2),0.1) \
 		.set_trans(Tween.TRANS_CUBIC)\
 		.set_ease(Tween.EASE_OUT)
@@ -133,6 +191,8 @@ func set_attack_button(id : int) -> void:
 		
 		
 		for child in card_scene.get_children():
+			if child is Tooltip:
+				continue
 			card_scene.remove_child(child)
 		var attack_button : AttackButtonScene = attack_button_scene.instantiate()
 		card_scene.add_child(attack_button)
@@ -157,14 +217,13 @@ func fill_room() -> bool:
 	for i in range(floor(remaining_deck_ratio * deck.get_child_count())):
 		deck.get_child(-i - 1).visible = false
 	Game.flee_available = true
-	flee_button.disabled = false
+	set_flee_disabled(false)
 	
 
 	return !card_drawn
 
 func animate_draw_to_slot(slot: int, card: Card) -> void:
 	var card_scene: CardScene = CardSceneScene.instantiate()
-	
 	var target_slot: Panel = room_scene.card_slots[slot]
 	var target_pos := target_slot.global_position
 	
@@ -191,7 +250,7 @@ func animate_draw_to_slot(slot: int, card: Card) -> void:
 	
 func animate_move_to_held(card_scene: CardScene,offset : Vector2) -> void:
 	if selected_card != -1:
-		remove_attack_button(selected_card)
+		await remove_attack_button(selected_card)
 		selected_card = -1
 	
 	add_child(card_scene)
@@ -285,9 +344,9 @@ func update_health(preview_health: int = -1) -> void:
 		)
 	else:
 		if preview_health < Game.health:
-			ghost_rect.color = Color("5e1115")
+			ghost_rect.color = Color("30090ba4")
 		else:
-			ghost_rect.color = Color("ed4c54")
+			ghost_rect.color = Color("ff6b724d")
 			
 		health_rect.size = Vector2(real_size, health_rect.size.y)
 		texture_container.size = Vector2(real_size, texture_container.size.y)
@@ -322,12 +381,33 @@ func update_health(preview_health: int = -1) -> void:
 		game_over_scene.visible = true
 		game_over_scene.set_data(false, Game.calculate_score(false))
 
-func _on_flee_button_pressed() -> void:
+
+
+func _on_gui_input(event: InputEvent) -> void:
+	if Game.game_state == Game.GameState.ANIMATING:
+		return
+	if event is InputEventScreenTouch:
+		if event.is_released():
+			if selected_card != -1:
+				await remove_attack_button(selected_card)
+				selected_card = -1
+
+
+func _on_flee_button_button_down() -> void:
+	var tween := create_tween()
+	tween.tween_property(flee_button, "scale", Vector2(0.93, 0.93), 0.1)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+
+
+func _on_flee_button_button_up() -> void:
+	var tween := create_tween()
+	tween.tween_property(flee_button, "scale", Vector2(1.0, 1.0), 0.15)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	if Game.game_state == Game.GameState.ANIMATING:
 		return
 	if Game.flee_available:
 		if selected_card != -1:
-			remove_attack_button(selected_card)
+			await remove_attack_button(selected_card)
 			selected_card = -1
 		for i in range(4):
 			await room_scene.move_card_to_back_of_deck(i)
@@ -338,15 +418,38 @@ func _on_flee_button_pressed() -> void:
 				await animate_draw_to_slot(i, card)
 		
 		Game.flee_available = false
-		flee_button.disabled = true
-		
+		flee_tooltip.hide_tip()
+		TutorialManager.advance(TutorialManager.current_step + 1)
+		TutorialManager.active = false
+		set_flee_disabled(true)
 
+func set_flee_button_panels() -> void:
+	var normal := flee_button.get_theme_stylebox("normal").duplicate()
 
-func _on_gui_input(event: InputEvent) -> void:
-	if Game.game_state == Game.GameState.ANIMATING:
-		return
-	if event is InputEventScreenTouch:
-		if event.is_released():
-			if selected_card != -1:
-				remove_attack_button(selected_card)
-				selected_card = -1
+	var hover := normal.duplicate() as StyleBoxFlat
+	hover.bg_color = Color("#1a1a1a")
+
+	var pressed := normal.duplicate() as StyleBoxFlat
+	pressed.bg_color = Color("#121111")
+
+	var focus := StyleBoxEmpty.new()
+	var disabled := normal.duplicate() as StyleBoxFlat
+	disabled.bg_color = Color("#333030")
+	disabled.border_color = Color("#333030")
+
+	flee_button.add_theme_stylebox_override("disabled", disabled)
+	flee_button.add_theme_stylebox_override("hover", hover)
+	flee_button.add_theme_stylebox_override("pressed", pressed)
+	flee_button.add_theme_stylebox_override("focus", focus)
+
+func set_flee_disabled(is_disabled: bool) -> void:
+	flee_button.disabled = is_disabled
+
+	var stylebox := disabled_panel.get_theme_stylebox("panel") as StyleBoxFlat
+	var tween := create_tween()
+	tween.tween_method(
+		func(c: Color) -> void: stylebox.bg_color = c,
+		stylebox.bg_color,
+		Color("#302e2eb7") if is_disabled else Color("#302e2e00"),
+		0.2
+	).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)

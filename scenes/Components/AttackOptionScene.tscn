@@ -1,15 +1,15 @@
 [gd_scene load_steps=11 format=3 uid="uid://cefavx5cghdwt"]
 
 [ext_resource type="StyleBox" uid="uid://iong458yhfhw" path="res://themes/AttackButtonPanel.tres" id="1_gc5rh"]
-[ext_resource type="FontFile" uid="uid://b477vgsbu4t3l" path="res://fonts/OptimusPrincepsSemiBold.ttf" id="2_efa6e"]
 [ext_resource type="Script" uid="uid://dfrtgbwj3jk3" path="res://scenes/Components/attack_option_scene.gd" id="2_rcu1f"]
 [ext_resource type="Texture2D" uid="uid://dwjd7d7e2phlx" path="res://sprites/potion.png" id="3_rcu1f"]
+[ext_resource type="FontFile" uid="uid://bfjkwiax0vix" path="res://fonts/OptimusPrincepsSemiBold3.ttf" id="4_gc5rh"]
 [ext_resource type="Texture2D" uid="uid://b51u127nn6pb8" path="res://sprites/heart.png" id="5_gc5rh"]
 [ext_resource type="Texture2D" uid="uid://dgsjn7ct47rm4" path="res://sprites/skull.png" id="7_70p7e"]
 [ext_resource type="Texture2D" uid="uid://bnvp0t8x7bb6o" path="res://sprites/equip.png" id="7_efa6e"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_7isle"]
-font = ExtResource("2_efa6e")
+[sub_resource type="LabelSettings" id="LabelSettings_efa6e"]
+font = ExtResource("4_gc5rh")
 font_size = 32
 font_color = Color(0.89, 0.89, 0.89, 1)
 
@@ -42,19 +42,23 @@ script = ExtResource("2_rcu1f")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 4
+anchors_preset = 8
+anchor_left = 0.5
 anchor_top = 0.5
+anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 3.0
-offset_top = -24.0
-offset_right = 185.0
-offset_bottom = 24.0
+offset_left = -91.0
+offset_top = -20.0
+offset_right = 91.0
+offset_bottom = 20.0
+grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 
 [node name="First" type="TextureRect" parent="HBoxContainer"]
+modulate = Color(0.84805, 0.771276, 0.673427, 1)
 texture_filter = 1
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("3_rcu1f")
 expand_mode = 2
@@ -67,7 +71,7 @@ mouse_filter = 1
 [node name="Amount" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "+31"
-label_settings = SubResource("LabelSettings_7isle")
+label_settings = SubResource("LabelSettings_efa6e")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -77,8 +81,9 @@ layout_mode = 2
 mouse_filter = 1
 
 [node name="Second" type="TextureRect" parent="HBoxContainer"]
+modulate = Color(0.897689, 0.84369, 0.773889, 1)
 texture_filter = 1
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("5_gc5rh")
 expand_mode = 2
@@ -88,6 +93,7 @@ layout_mode = 2
 
 [node name="SingleIcon" type="TextureRect" parent="."]
 visible = false
+modulate = Color(0.847059, 0.772549, 0.67451, 1)
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 1
 anchors_preset = 8

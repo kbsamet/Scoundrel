@@ -3,6 +3,7 @@ class_name CardScene
 
 const CARD_TEXTURE := preload("res://sprites/cards.png")
 
+@onready var tooltip: Panel = $Tooltip
 
 var card : Card
 var id: int
@@ -32,21 +33,12 @@ func setup(card : Card,id: int) -> void:
 	atlas.region = region
 
 	texture = atlas
+	var mat := material.duplicate() as ShaderMaterial
 	
-	if material is ShaderMaterial:
-		var mat := material.duplicate() as ShaderMaterial
-		
-		# 1. Pass the Node's visual size
-		mat.set_shader_parameter("rect_size", size if size.x > 0 else region.size)
-
-		# 2. Convert pixel region to UV region (0.0 to 1.0)
-		var tex_size := CARD_TEXTURE.get_size()
-		var uv_pos := region.position / tex_size
-		var uv_size := region.size / tex_size
-
-		# Pass as a vec4(x, y, width, height)
-		mat.set_shader_parameter("uv_rect", Color(uv_pos.x, uv_pos.y, uv_size.x, uv_size.y))
-		material = mat
+	mat.set_shader_parameter("atlas_size", Vector2(CARD_TEXTURE.get_width(), CARD_TEXTURE.get_height()))
+	mat.set_shader_parameter("region_pos", region.position)
+	mat.set_shader_parameter("region_size", region.size)
+	material = mat
 func get_card_region(rank: int, suit: int) -> Rect2:
 	var x := rank * 128
 	var y := suit * 178
@@ -61,3 +53,9 @@ func _on_gui_input(event: InputEvent) -> void:
 func set_shadow_overlay(is_covered: bool) -> void:
 	if material is ShaderMaterial:
 		material.set_shader_parameter("has_card_above", is_covered)
+		
+func show_tutorial_tip(text: String) -> void:
+	tooltip.show_tip(text)
+
+func hide_tutorial_tip() -> void:
+	tooltip.hide_tip()

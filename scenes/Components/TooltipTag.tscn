@@ -1,0 +1,59 @@
+[gd_scene load_steps=5 format=3 uid="uid://bu87ainnhoamd"]
+
+[ext_resource type="Script" uid="uid://c2b2lva26j5uw" path="res://scenes/Components/tooltip_tag.gd" id="1_dtlo7"]
+[ext_resource type="FontFile" uid="uid://b477vgsbu4t3l" path="res://fonts/OptimusPrincepsSemiBold.ttf" id="2_w1bte"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w1bte"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.0588235, 0.0509804, 0.0470588, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.164706, 0.141176, 0.12549, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_size = 8
+anti_aliasing = false
+
+[sub_resource type="LabelSettings" id="LabelSettings_24xp7"]
+font = ExtResource("2_w1bte")
+font_size = 27
+font_color = Color(0.415686, 0.345098, 0.25098, 1)
+
+[node name="TooltipTag" type="Panel"]
+z_index = 10
+z_as_relative = false
+custom_minimum_size = Vector2(250, 66)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -830.0
+offset_bottom = -1854.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_w1bte")
+script = ExtResource("1_dtlo7")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Weapon can't hit monsters stronger than its last kill"
+label_settings = SubResource("LabelSettings_24xp7")
+horizontal_alignment = 1

@@ -44,6 +44,10 @@ func draw_card() -> Card:
 	if deck.size() == 0:
 		print("Deck empty")
 		return null
+	if TutorialManager.is_active() and TutorialManager.scripted_deck.size() > 0:
+		var card := TutorialManager.scripted_deck[0]
+		TutorialManager.scripted_deck.erase(card)
+		return card
 	var card : Card = deck[0]
 	var card_copy := Card.from(card)
 	deck.erase(card)
