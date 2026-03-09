@@ -1,0 +1,13 @@
+[gd_resource type="MeshTexture" load_steps=3 format=3 uid="uid://b46gnf3w40ssv"]
+
+[ext_resource type="Texture2D" uid="uid://bum7xtmk5vqqx" path="res://sprites/slider.svg" id="1_ouxed"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_bl0rx"]
+size = Vector2(50, 50)
+center_offset = Vector3(25, 25, 0)
+orientation = 2
+
+[resource]
+mesh = SubResource("PlaneMesh_bl0rx")
+base_texture = ExtResource("1_ouxed")
+image_size = Vector2(50, 50)

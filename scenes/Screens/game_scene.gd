@@ -1,4 +1,6 @@
 extends Control
+class_name GameScene
+
 @onready var room_scene: RoomScene = $RoomScene
 @onready var held_card: Panel = $HeldCard
 const CardSceneScene := preload("res://scenes/Components/CardScene.tscn")
@@ -11,6 +13,11 @@ const CardSceneScene := preload("res://scenes/Components/CardScene.tscn")
 @onready var texture_container: Control = $HealthPanel/TextureContainer
 @onready var flee_tooltip: Tooltip = $FleeButton/FleeTooltip
 @onready var deck_tooltip: Tooltip = $Deck/DeckTooltip
+@onready var run_player: AudioStreamPlayer = $runPlayer
+@onready var flee_outer_panel: Panel = $FleeButton/FleeOuterPanel
+@onready var settings_button: TextureButton = $SettingsButton
+@onready var settings_screen: SettingsScreen = $SettingsScreen
+@onready var tranistion_shader: ColorRect = $TranistionShader
 
 @onready var deck: TextureRect = $Deck
 @onready var flee_button: Button = $FleeButton
@@ -20,15 +27,33 @@ const CardSceneScene := preload("res://scenes/Components/CardScene.tscn")
 @onready var slash_player: AudioStreamPlayer = $SlashPlayer
 @onready var equip_player: AudioStreamPlayer = $equipPlayer
 @onready var drink_player: AudioStreamPlayer = $DrinkPlayer
+@onready var tranistion: ColorRect = $Tranistion
+
 
 const attack_button_scene = preload("res://scenes/Components/AttackButtonScene.tscn")
 var selected_card := -1
+var game_loaded := false
 
 func _ready() -> void:
-	Game.reset()
-	set_flee_disabled(false)
+	settings_screen.close.connect(func() -> void: settings_screen.visible = false)
 	room_scene.discard_pile = discard_pile
 	room_scene.deck_position = deck.global_position
+	if game_loaded:
+		var tween := create_tween()
+		tranistion.modulate.a = 1
+		tween.tween_property(tranistion,"modulate:a",0,1.5) \
+			.set_trans(Tween.TRANS_CUBIC)\
+			.set_ease(Tween.EASE_IN)
+		settings_screen.visible = false
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), true)
+		await SaveManager.load_run(self)
+		update_health()
+		set_flee_disabled(!Game.flee_available)
+		await get_tree().create_timer(0.5).timeout
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), false)
+		return
+	Game.reset()
+	set_flee_disabled(false)
 	set_flee_button_panels()
 	if !SaveManager.has_seen_tutorial():
 		TutorialManager.start(self)
@@ -40,7 +65,15 @@ func _ready() -> void:
 		await animate_draw_to_slot(i, card)
 	if TutorialManager.is_active():
 		_on_tutorial_step()
-	
+
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_APPLICATION_FOCUS_OUT, \
+		NOTIFICATION_APPLICATION_PAUSED, \
+		NOTIFICATION_WM_CLOSE_REQUEST:
+			print("saving")
+			SaveManager.save_run(self)
+
 func _on_tutorial_step() -> void:
 	match TutorialManager.current_step:
 		TutorialManager.Step.POTION:
@@ -48,13 +81,13 @@ func _on_tutorial_step() -> void:
 		TutorialManager.Step.MONSTER_BARE:
 			room_scene.card_slots[0].get_child(0).show_tutorial_tip("Clubs and Spades are monsters.\nTap and attack with your fists.")
 		TutorialManager.Step.ROOM_CLEAR:
-			room_scene.card_slots[2].get_child(0).show_tutorial_tip("Move on to the next room when there is only 1 card left.\nTap and attack to move on.")
+			room_scene.card_slots[2].get_child(0).show_tutorial_tip("Move on to the next room\nwhen there is only 1 card left.\nTap and attack to move on.")
 		TutorialManager.Step.WEAPON_EQUIP:
 			room_scene.card_slots[0].get_child(0).show_tutorial_tip("Diamonds are weapons.\nThey reduce monster damage.\nTap and equip.")
 		TutorialManager.Step.MONSTER_WEAPON:
 			room_scene.card_slots[1].get_child(0).show_tutorial_tip("Use your weapon to kill this monster.\nTap and select weapon.")
 		TutorialManager.Step.WEAPON_DEGRADED:
-			held_card.get_child(0).show_tutorial_tip("Weapon can't hit monsters\n stronger than its last kill.")
+			held_card.get_child(0).show_tutorial_tip("Weapons can't hit monsters\n stronger than its last kill.")
 			room_scene.card_slots[2].get_child(0).show_tutorial_tip("You can still use your fists to kill it.\nTap and select fists.")
 		TutorialManager.Step.FLEE:
 			flee_tooltip.show_tip("Too dangerous? Flee the room.\nYou can't flee two rooms in a row.")
@@ -143,7 +176,7 @@ func make_card_move(id : int, secondary_attack : bool = false) -> void:
 			for i in range(4):
 				if room_scene.get_card(i) != null:
 					await room_scene.remove_card(i)
-			
+			SaveManager.clear_run()
 			game_over_scene.visible = true
 			game_over_scene.set_data(true,Game.calculate_score(true))
 	if TutorialManager.is_active():
@@ -198,10 +231,40 @@ func set_attack_button(id : int) -> void:
 		card_scene.add_child(attack_button)
 		attack_button.clicked.connect(func(first : bool) -> void: make_card_move(id,!first))
 		attack_button.pressed.connect(func(diff: int) -> void: update_health(Game.health + diff) if diff != -1 else update_health())
+		attack_button.pressed_disabled.connect(disabled_attack_pressed)
 		var held_card : Card = null if held_card.get_child_count() == 0 else held_card.get_child(0).card
 		attack_button.set_data(card,held_card)
-		attack_button.position = Vector2(0,280)
+		
+		attack_button.position = Vector2((card_scene.size.x / 2.0) - (attack_button.size.x / 2.0),280)
 
+func disabled_attack_pressed() -> void:
+	if held_card.get_child_count() == 0:
+		return
+	var child_list := held_card.get_child(0).get_children()
+	child_list.reverse()
+	for card in child_list:
+		if card is CardScene:
+			var tween := create_tween()
+			card.material.set_shader_parameter("glow_width",0.8)
+			tween.tween_method(
+			func(v: float) -> void: card.material.set_shader_parameter("glow_strength", v),
+				0.0,
+				0.6,
+				0.3
+			).set_trans(Tween.TRANS_CUBIC)\
+			.set_ease(Tween.EASE_OUT)
+			tween.tween_method(
+			func(v: float) -> void: card.material.set_shader_parameter("glow_strength", v),
+				0.6,
+				0,
+				0.3
+			).set_trans(Tween.TRANS_CUBIC)\
+			.set_ease(Tween.EASE_IN)
+			await tween.finished
+			card.material.set_shader_parameter("glow_width",0.08)
+			return
+			
+			
 func fill_room() -> bool:
 	var card_drawn := false
 	for i in range(4):
@@ -211,6 +274,7 @@ func fill_room() -> bool:
 				await animate_draw_to_slot(i, card)
 				card_drawn = true
 				
+	SaveManager.save_run(self)
 	
 	var remaining_deck_ratio : float = float(Game.deck.size()) / float(Game.MAX_DECK_COUNT)
 	remaining_deck_ratio = 1.0 - remaining_deck_ratio
@@ -237,7 +301,7 @@ func animate_draw_to_slot(slot: int, card: Card) -> void:
 	
 	
 	var tween := create_tween()
-	tween.tween_property(card_scene, "global_position", target_pos, 0.3)\
+	tween.tween_property(card_scene, "global_position", target_pos, 0.15 if Game.fast_mode else 0.3)\
 		.set_trans(Tween.TRANS_CUBIC)\
 		.set_ease(Tween.EASE_OUT)
 	
@@ -262,7 +326,7 @@ func animate_move_to_held(card_scene: CardScene,offset : Vector2) -> void:
 	card_scene.size = card_scene.custom_minimum_size
 	
 	var tween := create_tween()
-	tween.tween_property(card_scene, "global_position", target_pos, 0.8)\
+	tween.tween_property(card_scene, "global_position", target_pos, 0.4 if Game.fast_mode else 0.8)\
 		.set_trans(Tween.TRANS_CUBIC)\
 		.set_ease(Tween.EASE_OUT)
 	Game.set_state(Game.GameState.ANIMATING)
@@ -280,7 +344,7 @@ func discard_held_card() -> void:
 		var gather_tween := create_tween()
 		gather_tween.set_parallel(true)
 		for monster : CardScene in monsters:
-			gather_tween.tween_property(monster, "position", Vector2.ZERO, 0.3)\
+			gather_tween.tween_property(monster, "position", Vector2.ZERO, 0.15 if Game.fast_mode else 0.3)\
 				.set_trans(Tween.TRANS_CUBIC)\
 				.set_ease(Tween.EASE_OUT)
 			Game.set_state(Game.GameState.ANIMATING)
@@ -294,7 +358,7 @@ func discard_held_card() -> void:
 	weapon_scene.size = weapon_scene.custom_minimum_size
 	
 	var discard_tween := create_tween()
-	discard_tween.tween_property(weapon_scene, "global_position", discard_pile.global_position, 0.5)\
+	discard_tween.tween_property(weapon_scene, "global_position", discard_pile.global_position, 0.25 if Game.fast_mode else 0.5)\
 		.set_trans(Tween.TRANS_CUBIC)\
 		.set_ease(Tween.EASE_OUT)
 	Game.set_state(Game.GameState.ANIMATING)
@@ -307,7 +371,7 @@ func discard_held_card() -> void:
 
 func update_health(preview_health: int = -1) -> void:
 
-	health_label.text = str(Game.health) + "/ 20"
+	health_label.text = str(Game.health) + " / 20"
 
 	var panel_width  : float = health_panel.size.x
 	var real_size    : float = (float(Game.health)   / 20.0) * panel_width - 8.0
@@ -378,8 +442,11 @@ func update_health(preview_health: int = -1) -> void:
 		Game.set_state(Game.GameState.ANIMATING)
 		tween.tween_callback(func() -> void: Game.set_state(Game.GameState.PLAYING))
 	if preview_health == -1 and Game.health <= 0:
+		SaveManager.clear_run()
+		TutorialManager.active = false
 		game_over_scene.visible = true
 		game_over_scene.set_data(false, Game.calculate_score(false))
+		
 
 
 
@@ -406,6 +473,8 @@ func _on_flee_button_button_up() -> void:
 	if Game.game_state == Game.GameState.ANIMATING:
 		return
 	if Game.flee_available:
+		set_flee_disabled(true)
+		run_player.play()
 		if selected_card != -1:
 			await remove_attack_button(selected_card)
 			selected_card = -1
@@ -421,7 +490,6 @@ func _on_flee_button_button_up() -> void:
 		flee_tooltip.hide_tip()
 		TutorialManager.advance(TutorialManager.current_step + 1)
 		TutorialManager.active = false
-		set_flee_disabled(true)
 
 func set_flee_button_panels() -> void:
 	var normal := flee_button.get_theme_stylebox("normal").duplicate()
@@ -446,10 +514,37 @@ func set_flee_disabled(is_disabled: bool) -> void:
 	flee_button.disabled = is_disabled
 
 	var stylebox := disabled_panel.get_theme_stylebox("panel") as StyleBoxFlat
-	var tween := create_tween()
+	var outer_stylebox := flee_outer_panel.get_theme_stylebox("panel") as StyleBoxFlat
+	
+	var tween := create_tween().set_parallel()
 	tween.tween_method(
 		func(c: Color) -> void: stylebox.bg_color = c,
 		stylebox.bg_color,
-		Color("#302e2eb7") if is_disabled else Color("#302e2e00"),
+		Color("#171413ca") if is_disabled else Color("#17141300"),
 		0.2
 	).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	
+	tween.tween_method(
+		func(c: Color) -> void: outer_stylebox.border_color = c,
+		outer_stylebox.border_color,
+		Color("#2a241f") if is_disabled else Color("#382e2a"),
+		0.2
+	).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	
+
+
+func _on_settings_button_button_down() -> void:
+	var tween := create_tween()
+	tween.tween_property(settings_button, "scale", Vector2(0.8, 0.8), 0.1)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+
+
+func _on_settings_button_button_up() -> void:
+	var tween := create_tween()
+	tween.tween_property(settings_button, "scale", Vector2(1.0, 1.0), 0.15)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+
+
+func _on_settings_button_pressed() -> void:
+	settings_screen.visible = true
+	SaveManager.save_run(self)

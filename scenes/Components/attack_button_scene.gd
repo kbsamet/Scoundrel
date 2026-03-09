@@ -8,10 +8,12 @@ class_name AttackButtonScene
 
 signal clicked(first: bool)
 signal pressed(amt: int)
+signal pressed_disabled()
 
 func _ready() -> void:
 	first_option.clicked.connect(_on_first_clicked)
 	first_option.pressed.connect(pressed.emit)
+	first_option.pressed_disabled.connect(pressed_disabled.emit)
 	second_option.clicked.connect(_on_second_clicked)
 	second_option.pressed.connect(pressed.emit)
 

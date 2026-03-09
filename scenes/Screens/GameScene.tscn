@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://cafaeua3q5u4k"]
+[gd_scene load_steps=35 format=3 uid="uid://cafaeua3q5u4k"]
 
 [ext_resource type="Script" uid="uid://ctinpnkkwpm35" path="res://scenes/Screens/game_scene.gd" id="1_ax3qu"]
 [ext_resource type="Texture2D" uid="uid://d21u3jweb48bc" path="res://sprites/wood.jpg" id="2_ax3qu"]
@@ -17,13 +17,18 @@
 [ext_resource type="AudioStream" uid="uid://c86rkybd7cxtr" path="res://sfx/slash.mp3" id="9_yd5jp"]
 [ext_resource type="AudioStream" uid="uid://dvi6yr1ys6mxg" path="res://sfx/equip.mp3" id="10_8x11w"]
 [ext_resource type="AudioStream" uid="uid://ckdue3t181ihh" path="res://sfx/drink.mp3" id="11_4p2y1"]
+[ext_resource type="Texture2D" uid="uid://cqw7e45dgg0mc" path="res://sprites/deck.png" id="11_v6epn"]
 [ext_resource type="FontFile" uid="uid://c5ft65lxgn0o3" path="res://fonts/OptimusPrincepsSemiBold2.ttf" id="16_qv8uk"]
+[ext_resource type="AudioStream" uid="uid://bacb34xschbvd" path="res://sfx/run.mp3" id="19_k66q7"]
+[ext_resource type="Texture2D" uid="uid://gr677hha0yi1" path="res://sprites/cog.png" id="21_k66q7"]
+[ext_resource type="PackedScene" uid="uid://cetbw7vn2uyy3" path="res://scenes/Screens/SettingsScreen.tscn" id="22_gqjwc"]
+[ext_resource type="Material" uid="uid://t0w5fyr6ph80" path="res://themes/TransitionScene.tres" id="22_tm2ni"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tlyhp"]
 shader = ExtResource("2_hqe0l")
-shader_parameter/vignette_strength = 1.192
-shader_parameter/brightness = 0.779
-shader_parameter/tint = Color(0.0745098, 0.0588235, 0.054902, 1)
+shader_parameter/vignette_strength = 0.745
+shader_parameter/brightness = 0.917
+shader_parameter/tint = Color(0.11, 0.08712, 0.0814, 1)
 shader_parameter/tint_amount = 0.794
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0y3wm"]
@@ -33,7 +38,7 @@ border_width_left = 4
 border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
-border_color = Color(0.15, 0.15, 0.15, 1)
+border_color = Color(0.22, 0.181867, 0.1628, 1)
 corner_radius_top_left = 999
 corner_radius_top_right = 999
 corner_radius_bottom_right = 999
@@ -44,7 +49,7 @@ font = ExtResource("8_21c1o")
 font_size = 48
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qv8uk"]
-bg_color = Color(0.19, 0.1786, 0.1786, 0)
+bg_color = Color(0.0901961, 0.0784314, 0.0745098, 0)
 border_color = Color(0.117647, 0.117647, 0.117647, 1)
 corner_radius_top_left = 999
 corner_radius_top_right = 999
@@ -62,9 +67,6 @@ corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_xs4ih"]
-load_path = "res://.godot/imported/deck.png-2517bf0d4854379f0e50a84d659d8f14.ctex"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_llxvm"]
 shader = ExtResource("6_gr1j8")
@@ -94,6 +96,7 @@ font_size = 48
 [sub_resource type="LabelSettings" id="LabelSettings_gr1j8"]
 font = ExtResource("16_qv8uk")
 font_size = 64
+font_color = Color(0.541176, 0.407843, 0.282353, 1)
 
 [node name="GameScene" type="Control"]
 layout_mode = 3
@@ -104,17 +107,11 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ax3qu")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 0
-offset_right = 1100.0
-offset_bottom = 1945.0
-color = Color(0.0745098, 0.0588235, 0.054902, 1)
-
 [node name="Bg" type="Sprite2D" parent="."]
 modulate = Color(0.521569, 0.227451, 0.231373, 1)
 material = SubResource("ShaderMaterial_tlyhp")
-position = Vector2(607, 1158)
-scale = Vector2(0.718812, 0.792023)
+position = Vector2(524, 944)
+scale = Vector2(0.896645, 0.892287)
 texture = ExtResource("2_ax3qu")
 
 [node name="RoomScene" parent="." instance=ExtResource("3_tlyhp")]
@@ -123,10 +120,9 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.0
-offset_left = 4.5
-offset_top = 818.0
-offset_right = 4.5
-offset_bottom = 818.0
+offset_top = 824.0
+offset_right = 0.0
+offset_bottom = 824.0
 grow_vertical = 1
 
 [node name="FleeButton" type="Button" parent="."]
@@ -153,7 +149,7 @@ theme_override_styles/hover = ExtResource("6_0y3wm")
 theme_override_styles/pressed = ExtResource("5_fwyns")
 theme_override_styles/normal = ExtResource("5_fwyns")
 
-[node name="Panel" type="Panel" parent="FleeButton"]
+[node name="FleeOuterPanel" type="Panel" parent="FleeButton"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -161,15 +157,15 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -120.0
-offset_top = -120.0
+offset_top = -119.5
 offset_right = 120.0
-offset_bottom = 120.0
+offset_bottom = 120.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_0y3wm")
 
-[node name="TextureRect" type="TextureRect" parent="FleeButton/Panel"]
+[node name="TextureRect" type="TextureRect" parent="FleeButton/FleeOuterPanel"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -185,17 +181,17 @@ grow_vertical = 2
 texture = ExtResource("5_llxvm")
 expand_mode = 4
 
-[node name="Label" type="Label" parent="FleeButton/Panel"]
+[node name="Label" type="Label" parent="FleeButton/FleeOuterPanel"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -42.5
-offset_top = -104.0
-offset_right = 42.5
-offset_bottom = -51.0
+offset_left = -42.0
+offset_top = -109.5
+offset_right = 43.0
+offset_bottom = -50.5
 grow_horizontal = 2
 grow_vertical = 0
 text = "Flee"
@@ -208,22 +204,23 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -108.5
-offset_top = -111.5
-offset_right = 109.5
-offset_bottom = 107.5
+offset_left = -109.0
+offset_top = -109.5
+offset_right = 109.0
+offset_bottom = 109.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_qv8uk")
 
 [node name="FleeTooltip" parent="FleeButton" instance=ExtResource("9_qytwv")]
+visible = false
 layout_mode = 1
 offset_left = 6.5
 offset_top = -90.0
 offset_right = 31.5
 offset_bottom = -249.0
-custom_y = -100
+custom_y = -120
 
 [node name="HeldCard" type="Panel" parent="."]
 custom_minimum_size = Vector2(187, 262)
@@ -255,14 +252,13 @@ grow_vertical = 0
 theme_override_styles/panel = ExtResource("4_yd5jp")
 
 [node name="Deck" type="TextureRect" parent="."]
-z_index = 3
 custom_minimum_size = Vector2(187, 262)
 layout_mode = 0
 offset_left = 98.0
 offset_top = 395.0
 offset_right = 285.0
 offset_bottom = 657.0
-texture = SubResource("CompressedTexture2D_xs4ih")
+texture = ExtResource("11_v6epn")
 
 [node name="Deck2" type="TextureRect" parent="Deck"]
 custom_minimum_size = Vector2(187, 262)
@@ -270,7 +266,7 @@ layout_mode = 0
 offset_top = -9.0
 offset_right = 187.0
 offset_bottom = 253.0
-texture = SubResource("CompressedTexture2D_xs4ih")
+texture = ExtResource("11_v6epn")
 
 [node name="Deck3" type="TextureRect" parent="Deck"]
 custom_minimum_size = Vector2(187, 262)
@@ -278,7 +274,7 @@ layout_mode = 0
 offset_top = -18.0
 offset_right = 187.0
 offset_bottom = 244.0
-texture = SubResource("CompressedTexture2D_xs4ih")
+texture = ExtResource("11_v6epn")
 
 [node name="Deck4" type="TextureRect" parent="Deck"]
 custom_minimum_size = Vector2(187, 262)
@@ -286,7 +282,7 @@ layout_mode = 0
 offset_top = -27.0
 offset_right = 187.0
 offset_bottom = 235.0
-texture = SubResource("CompressedTexture2D_xs4ih")
+texture = ExtResource("11_v6epn")
 
 [node name="Deck5" type="TextureRect" parent="Deck"]
 custom_minimum_size = Vector2(187, 262)
@@ -294,15 +290,16 @@ layout_mode = 0
 offset_top = -36.0
 offset_right = 187.0
 offset_bottom = 226.0
-texture = SubResource("CompressedTexture2D_xs4ih")
+texture = ExtResource("11_v6epn")
 
 [node name="DeckTooltip" parent="Deck" instance=ExtResource("9_qytwv")]
+visible = false
 layout_mode = 1
 offset_left = -12.0
 offset_top = -163.0
 offset_right = 51.0
 offset_bottom = -322.0
-custom_y = -163
+custom_y = -180
 
 [node name="HealthPanel" type="Panel" parent="."]
 layout_mode = 0
@@ -372,10 +369,6 @@ text = "20 / 20"
 label_settings = SubResource("LabelSettings_7s5hy")
 horizontal_alignment = 1
 
-[node name="GameOverScene" parent="." instance=ExtResource("6_4p2y1")]
-visible = false
-layout_mode = 1
-
 [node name="PunchPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_tlyhp")
 
@@ -388,6 +381,9 @@ stream = ExtResource("10_8x11w")
 [node name="DrinkPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_4p2y1")
 volume_db = -6.724
+
+[node name="runPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("19_k66q7")
 
 [node name="HealthLabel" type="Label" parent="."]
 layout_mode = 1
@@ -402,7 +398,67 @@ grow_horizontal = 2
 text = "Health"
 label_settings = SubResource("LabelSettings_gr1j8")
 
+[node name="Button" type="Button" parent="."]
+visible = false
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 0
+offset_left = 880.0
+offset_top = 17.0
+offset_right = 1070.0
+offset_bottom = 71.0
+theme_override_colors/font_color = Color(0.388235, 0.32549, 0.235294, 1)
+theme_override_fonts/font = ExtResource("16_qv8uk")
+theme_override_font_sizes/font_size = 32
+text = "Reset (Debug)"
+
+[node name="SettingsButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 987.0
+offset_top = 100.0
+offset_right = 1059.0
+offset_bottom = 172.0
+pivot_offset = Vector2(32, 32)
+texture_normal = ExtResource("21_k66q7")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="Tranistion" type="ColorRect" parent="."]
+z_index = 100
+layout_mode = 0
+offset_right = 1085.0
+offset_bottom = 2149.0
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+
+[node name="TranistionShader" type="ColorRect" parent="."]
+z_index = 100
+material = ExtResource("22_tm2ni")
+layout_mode = 0
+offset_right = 1085.0
+offset_bottom = 2149.0
+mouse_filter = 2
+
+[node name="SettingsScreen" parent="." instance=ExtResource("22_gqjwc")]
+visible = false
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 1080.0
+offset_bottom = 2422.0
+grow_horizontal = 1
+grow_vertical = 1
+color = Color(0, 0, 0, 0.705882)
+
+[node name="GameOverScene" parent="." instance=ExtResource("6_4p2y1")]
+visible = false
+layout_mode = 1
+
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="button_down" from="FleeButton" to="." method="_on_flee_button_button_down"]
 [connection signal="button_up" from="FleeButton" to="." method="_on_flee_button_button_up"]
 [connection signal="gui_input" from="HeldCard" to="." method="_on_held_card_gui_input"]
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="button_down" from="SettingsButton" to="." method="_on_settings_button_button_down"]
+[connection signal="button_up" from="SettingsButton" to="." method="_on_settings_button_button_up"]
+[connection signal="pressed" from="SettingsButton" to="." method="_on_settings_button_pressed"]

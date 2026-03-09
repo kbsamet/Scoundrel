@@ -39,7 +39,7 @@ func remove_card(slot: int, animated : bool = true) -> Card:
 	card_scene.size = card_scene.custom_minimum_size
 	
 	var tween := create_tween()
-	tween.tween_property(card_scene, "global_position", discard_pile.global_position, 0.4)\
+	tween.tween_property(card_scene, "global_position", discard_pile.global_position, 0.2 if Game.fast_mode else 0.4)\
 		.set_trans(Tween.TRANS_CUBIC)\
 		.set_ease(Tween.EASE_IN_OUT)
 		
@@ -68,7 +68,7 @@ func move_card_to_back_of_deck(slot:int) -> Card:
 	Game.deck.append(card)
 		
 	var tween := create_tween()
-	tween.tween_property(card_scene, "global_position", deck_position, 0.4)\
+	tween.tween_property(card_scene, "global_position", deck_position, 0.2 if Game.fast_mode else 0.4)\
 		.set_trans(Tween.TRANS_CUBIC)\
 		.set_ease(Tween.EASE_IN_OUT)
 		

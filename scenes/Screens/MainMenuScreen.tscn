@@ -1,0 +1,255 @@
+[gd_scene load_steps=17 format=3 uid="uid://s5rrl6a7duld"]
+
+[ext_resource type="Shader" uid="uid://dq0ismthqwwew" path="res://scenes/Screens/Wood.gdshader" id="1_66aon"]
+[ext_resource type="Script" uid="uid://nfepnhpggv3c" path="res://scenes/Screens/main_menu_screen.gd" id="1_fxrwc"]
+[ext_resource type="Texture2D" uid="uid://d21u3jweb48bc" path="res://sprites/wood.jpg" id="2_pt1mh"]
+[ext_resource type="FontFile" uid="uid://c5ft65lxgn0o3" path="res://fonts/OptimusPrincepsSemiBold2.ttf" id="3_fxrwc"]
+[ext_resource type="FontFile" uid="uid://bfjkwiax0vix" path="res://fonts/OptimusPrincepsSemiBold3.ttf" id="3_pt1mh"]
+[ext_resource type="PackedScene" uid="uid://cetbw7vn2uyy3" path="res://scenes/Screens/SettingsScreen.tscn" id="6_qpfpi"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qpfpi"]
+shader = ExtResource("1_66aon")
+shader_parameter/vignette_strength = 4.0
+shader_parameter/brightness = 1.17
+shader_parameter/tint = Color(0.11, 0.08712, 0.0814, 1)
+shader_parameter/tint_amount = 0.678
+
+[sub_resource type="FontVariation" id="FontVariation_ayulh"]
+base_font = ExtResource("3_pt1mh")
+spacing_glyph = 4
+
+[sub_resource type="LabelSettings" id="LabelSettings_b1bc4"]
+font = SubResource("FontVariation_ayulh")
+font_size = 240
+font_color = Color(0.788235, 0.627451, 0.376471, 1)
+outline_size = 6
+outline_color = Color(0.541176, 0.392157, 0.156863, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_rkgs0"]
+base_font = ExtResource("3_fxrwc")
+spacing_glyph = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_70ohe"]
+bg_color = Color(0.121569, 0.0823529, 0.0431373, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.47, 0.41595, 0.329, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q5add"]
+bg_color = Color(0.14, 0.1183, 0.0966, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.47, 0.41595, 0.329, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hlteb"]
+bg_color = Color(0.180392, 0.12549, 0.0627451, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.541176, 0.392157, 0.156863, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rkgs0"]
+bg_color = Color(0.121569, 0.0823529, 0.0431373, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.47, 0.41595, 0.329, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_330hm"]
+bg_color = Color(0.180392, 0.12549, 0.0627451, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.541176, 0.392157, 0.156863, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oyc78"]
+bg_color = Color(0.12, 0.087, 0.06, 0.541176)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.164706, 0.141176, 0.0941176, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="MainMenuScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fxrwc")
+
+[node name="Bg" type="Sprite2D" parent="."]
+modulate = Color(0.521569, 0.227451, 0.231373, 1)
+material = SubResource("ShaderMaterial_qpfpi")
+position = Vector2(524, 944)
+scale = Vector2(0.896645, 0.892287)
+texture = ExtResource("2_pt1mh")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 200
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Scoundrel"
+label_settings = SubResource("LabelSettings_b1bc4")
+horizontal_alignment = 1
+
+[node name="Control2" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ContinueRunButton" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(600, 180)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.37, 0.36149, 0.3478, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.788235, 0.627451, 0.376471, 1)
+theme_override_colors/font_hover_color = Color(0.788235, 0.627451, 0.376471, 1)
+theme_override_colors/font_outline_color = Color(0.788235, 0.627451, 0.376471, 1)
+theme_override_colors/font_color = Color(0.788235, 0.627451, 0.376471, 1)
+theme_override_colors/font_focus_color = Color(0.788235, 0.627451, 0.376471, 1)
+theme_override_colors/font_pressed_color = Color(0.788235, 0.627451, 0.376471, 1)
+theme_override_fonts/font = SubResource("FontVariation_rkgs0")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/focus = SubResource("StyleBoxFlat_70ohe")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_q5add")
+theme_override_styles/hover = SubResource("StyleBoxFlat_hlteb")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_70ohe")
+theme_override_styles/normal = SubResource("StyleBoxFlat_hlteb")
+disabled = true
+text = "Continue Run"
+
+[node name="Control3" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="NewRunButton" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(600, 180)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.37, 0.36149, 0.3478, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.788235, 0.627451, 0.376471, 1)
+theme_override_colors/font_hover_color = Color(0.788235, 0.627451, 0.376471, 1)
+theme_override_colors/font_outline_color = Color(0.788235, 0.627451, 0.376471, 1)
+theme_override_colors/font_color = Color(0.788235, 0.627451, 0.376471, 1)
+theme_override_colors/font_focus_color = Color(0.788235, 0.627451, 0.376471, 1)
+theme_override_colors/font_pressed_color = Color(0.788235, 0.627451, 0.376471, 1)
+theme_override_fonts/font = SubResource("FontVariation_rkgs0")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/focus = SubResource("StyleBoxFlat_rkgs0")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_rkgs0")
+theme_override_styles/hover = SubResource("StyleBoxFlat_330hm")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_rkgs0")
+theme_override_styles/normal = SubResource("StyleBoxFlat_330hm")
+text = "Start New Run"
+
+[node name="Control4" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ReplayTutorialButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(450, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_colors/font_hover_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_colors/font_outline_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_colors/font_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_colors/font_focus_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_colors/font_pressed_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_fonts/font = SubResource("FontVariation_rkgs0")
+theme_override_font_sizes/font_size = 56
+theme_override_styles/focus = SubResource("StyleBoxFlat_oyc78")
+theme_override_styles/normal = SubResource("StyleBoxFlat_oyc78")
+text = "Replay Tutorial"
+
+[node name="SettingsButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(450, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_colors/font_hover_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_colors/font_outline_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_colors/font_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_colors/font_focus_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_colors/font_pressed_color = Color(0.290196, 0.219608, 0.156863, 1)
+theme_override_fonts/font = SubResource("FontVariation_rkgs0")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/focus = SubResource("StyleBoxFlat_oyc78")
+theme_override_styles/normal = SubResource("StyleBoxFlat_oyc78")
+text = "Settings"
+
+[node name="SettingsScreen" parent="." instance=ExtResource("6_qpfpi")]
+visible = false
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 1080.0
+offset_bottom = 2422.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[connection signal="button_up" from="MarginContainer/VBoxContainer/ContinueRunButton" to="." method="_on_continue_run_button_button_up"]
+[connection signal="focus_entered" from="MarginContainer/VBoxContainer/ContinueRunButton" to="." method="_on_continue_run_button_focus_entered"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ContinueRunButton" to="." method="_on_continue_run_button_pressed"]
+[connection signal="button_up" from="MarginContainer/VBoxContainer/NewRunButton" to="." method="_on_new_run_button_button_up"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/NewRunButton" to="." method="_on_new_run_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/ReplayTutorialButton" to="." method="_on_replay_tutorial_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]

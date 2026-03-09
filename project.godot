@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Scoundrel"
-run/main_scene="uid://cafaeua3q5u4k"
+run/main_scene="uid://s5rrl6a7duld"
 config/features=PackedStringArray("4.4", "Mobile")
 run/max_fps=60
 config/icon="res://icon.svg"
@@ -29,6 +29,7 @@ gdscript/warnings/untyped_declaration=2
 
 window/size/viewport_width=1080
 window/size/viewport_height=1920
+window/size/resizable=false
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=1

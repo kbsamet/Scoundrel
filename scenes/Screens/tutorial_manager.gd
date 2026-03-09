@@ -42,6 +42,6 @@ func _build_scripted_deck() -> void:
 		Card.create(7,  Card.card_suit.SPADES),
 		Card.create(14,  Card.card_suit.CLUBS),
 		Card.create(13, Card.card_suit.SPADES),
-		Card.create(9,  Card.card_suit.HEARTS),
+		Card.create(9,  Card.card_suit.CLUBS),
 		Card.create(8,  Card.card_suit.DIAMONDS),
 	]

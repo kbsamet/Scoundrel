@@ -1,16 +1,74 @@
-[gd_scene load_steps=5 format=3 uid="uid://duwo347mx2jgj"]
+[gd_scene load_steps=13 format=3 uid="uid://duwo347mx2jgj"]
 
 [ext_resource type="Script" uid="uid://dtgb60r0v1ook" path="res://scenes/Components/game_over_scene.gd" id="1_7kyk7"]
 [ext_resource type="FontFile" uid="uid://c5ft65lxgn0o3" path="res://fonts/OptimusPrincepsSemiBold2.ttf" id="2_4vbkl"]
+[ext_resource type="Shader" uid="uid://dq0ismthqwwew" path="res://scenes/Screens/Wood.gdshader" id="2_lsfja"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bctww"]
+shader = ExtResource("2_lsfja")
+shader_parameter/vignette_strength = 4.0
+shader_parameter/brightness = 0.287
+shader_parameter/tint = Color(0.58, 0.404067, 0.203, 1)
+shader_parameter/tint_amount = 1.0
+
+[sub_resource type="FontVariation" id="FontVariation_jyshq"]
+base_font = ExtResource("2_4vbkl")
+spacing_glyph = 7
 
 [sub_resource type="LabelSettings" id="LabelSettings_1ubts"]
-font = ExtResource("2_4vbkl")
-font_size = 128
-font_color = Color(1, 0.16, 0.16, 1)
+font = SubResource("FontVariation_jyshq")
+font_size = 158
+font_color = Color(0.768627, 0.188235, 0.188235, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_kmple"]
+base_font = ExtResource("2_4vbkl")
+spacing_glyph = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_17co2"]
+font = SubResource("FontVariation_kmple")
+font_size = 48
+font_color = Color(0.368627, 0.360784, 0.34902, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_4vbkl"]
-font = ExtResource("2_4vbkl")
+font = SubResource("FontVariation_kmple")
 font_size = 48
+font_color = Color(0.772549, 0.188235, 0.188235, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e5h88"]
+bg_color = Color(0.117647, 0.0235294, 0.0235294, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.419608, 0.101961, 0.101961, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jm1yd"]
+bg_color = Color(0.188235, 0.0392157, 0.0392157, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.419608, 0.101961, 0.101961, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujjoi"]
+bg_color = Color(0.117647, 0.0235294, 0.0235294, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.164706, 0.141176, 0.0941176, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [node name="GameOverScene" type="Control"]
 z_index = 100
@@ -22,10 +80,21 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7kyk7")
 
-[node name="TextureRect" type="ColorRect" parent="."]
+[node name="bg" type="ColorRect" parent="."]
+modulate = Color(0, 0, 0, 1)
 layout_mode = 0
+offset_top = -61.0
 offset_right = 1088.0
-offset_bottom = 2424.0
+offset_bottom = 2769.0
+color = Color(0, 0, 0, 1)
+
+[node name="ShaderRect" type="ColorRect" parent="."]
+modulate = Color(0, 0, 0, 1)
+material = SubResource("ShaderMaterial_bctww")
+layout_mode = 0
+offset_top = -557.0
+offset_right = 1088.0
+offset_bottom = 2538.0
 color = Color(0, 0, 0, 0.792157)
 
 [node name="Label" type="Label" parent="."]
@@ -35,50 +104,135 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -531.0
-offset_top = -422.0
-offset_right = 539.0
-offset_bottom = -280.667
+offset_left = -532.0
+offset_top = -448.0
+offset_right = 538.0
+offset_bottom = -253.792
 grow_horizontal = 2
 grow_vertical = 2
-text = "Game Over"
+text = "Slain"
 label_settings = SubResource("LabelSettings_1ubts")
 horizontal_alignment = 1
 
-[node name="ScoreLabel" type="Label" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -539.0
-offset_top = -275.0
-offset_right = 539.0
-offset_bottom = -134.0
+offset_left = -263.0
+offset_top = -189.0
+offset_right = 300.0
+offset_bottom = 74.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Your Score was: 1093
-High score : 1200"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Score:"
+label_settings = SubResource("LabelSettings_17co2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ScoreLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "1923"
 label_settings = SubResource("LabelSettings_4vbkl")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Button" type="Button" parent="."]
+[node name="Control2" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ScoreLabel" type="Label" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "High Score:"
+label_settings = SubResource("LabelSettings_17co2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HighScoreLabel" type="Label" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "1923"
+label_settings = SubResource("LabelSettings_4vbkl")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control3" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="NewHighScoreLabel" type="Label" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "New High Score !"
+label_settings = SubResource("LabelSettings_4vbkl")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NewRunButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.5
-offset_top = -44.5
-offset_right = 158.5
-offset_bottom = 60.5
+offset_left = -251.0
+offset_top = 149.0
+offset_right = 255.0
+offset_bottom = 254.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.772549, 0.188235, 0.188235, 1)
 theme_override_fonts/font = ExtResource("2_4vbkl")
-theme_override_font_sizes/font_size = 64
-text = "Restart"
+theme_override_font_sizes/font_size = 48
+theme_override_styles/focus = SubResource("StyleBoxFlat_e5h88")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_jm1yd")
+theme_override_styles/normal = SubResource("StyleBoxFlat_e5h88")
+text = "New Run"
+metadata/_edit_use_anchors_ = true
 
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[node name="MainMenuButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = 281.0
+offset_right = 220.0
+offset_bottom = 354.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.529412, 0.529412, 0.529412, 1)
+theme_override_fonts/font = ExtResource("2_4vbkl")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_ujjoi")
+text = "Main Menu"
+
+[node name="Transition" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 1088.0
+offset_bottom = 2424.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[connection signal="pressed" from="NewRunButton" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="MainMenuButton" to="." method="_on_button_2_pressed"]

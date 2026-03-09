@@ -13,7 +13,7 @@ class_name AttackOptionScene
 
 signal clicked
 signal pressed
-
+signal pressed_disabled
 
 enum panel_state { DISABLED, RED, NORMAL, HOVER, DISABLEDRED }
 var last_state: panel_state = panel_state.NORMAL
@@ -74,13 +74,19 @@ func set_health_rects(health_change : int) -> void:
 		new_health.position = health_bar.position + Vector2((health_bar.size.x - width) + 12,0)
 		
 func _on_gui_input(event: InputEvent) -> void:
-	if last_state == panel_state.DISABLED || last_state == panel_state.DISABLEDRED:
-		return
 	if event is InputEventScreenTouch:
 		if event.is_pressed():
+			if last_state == panel_state.DISABLED || last_state == panel_state.DISABLEDRED:
+				pressed_disabled.emit()
+				var tween := create_tween()
+				tween.tween_property(self,"modulate",Color(2.2, 0.11, 0.11, 1.0),0.3)
+				tween.tween_property(self,"modulate",Color("ffffff"),0.3)
+				return
 			pressed.emit(health_change)
 			set_state(panel_state.HOVER)
 		if event.is_released():
+			if last_state == panel_state.DISABLED || last_state == panel_state.DISABLEDRED:
+				return
 			set_state(last_state)
 			if get_global_rect().has_point(get_global_mouse_position()):
 				clicked.emit()

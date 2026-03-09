@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://t0w5fyr6ph80"]
+
+[ext_resource type="Shader" uid="uid://cxqd3xe8ap2qt" path="res://scenes/Screens/TransitionShader.gdshader" id="1_rx1q7"]
+
+[resource]
+shader = ExtResource("1_rx1q7")
+shader_parameter/_CirclePosition = Vector2(0.5, 0.5)
+shader_parameter/_Progress = 0.0
+shader_parameter/_Smoothness = 0.07
+shader_parameter/_Background = Color(0.08, 0.012, 0.012, 0.843137)
+shader_parameter/_EllipseScale = Vector2(1, 0.75)

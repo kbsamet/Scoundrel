@@ -6,11 +6,14 @@ var deck : Array[Card] = []
 var flee_available := true
 var held_weapon_max_dmg := INF
 var held_weapon_monster_amt := 0
-var fist_selected := true
 var high_score := SaveManager.load_score()
 var game_state := GameState.ANIMATING
+var fast_mode := false
 
 enum GameState {ANIMATING,PLAYING}
+
+func _ready() -> void:
+	fast_mode = SaveManager.load_settings()["anim_speed"] == 1
 
 func set_state(state : GameState) -> void:
 	game_state = state
@@ -19,7 +22,6 @@ func reset() -> void:
 	health = 20
 	deck = []
 	flee_available = true
-	fist_selected = true
 	held_weapon_max_dmg = INF
 	held_weapon_monster_amt = 0
 	game_state = GameState.ANIMATING
@@ -58,3 +60,11 @@ func heal(amt: int) -> void:
 
 func take_damage(amt : int) -> void:
 	health -= amt
+
+func load_from(game : Game) -> void:
+	health = game.health
+	deck = game.deck
+	flee_available = game.flee_available
+	held_weapon_max_dmg = game.held_weapon_max_dmg
+	held_weapon_monster_amt = game.held_weapon_monster_amt
+	fast_mode = SaveManager.load_settings()["anim_speed"] == 1
