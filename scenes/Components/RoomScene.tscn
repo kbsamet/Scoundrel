@@ -4,14 +4,11 @@
 [ext_resource type="StyleBox" uid="uid://dj47o651rk7oq" path="res://themes/RoomScene.tres" id="2_iaxv0"]
 
 [node name="RoomScene" type="Control"]
+custom_minimum_size = Vector2(893, 262)
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 6.0
-offset_bottom = -1658.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = 0
+offset_right = 893.0
+offset_bottom = 262.0
 script = ExtResource("1_o66vl")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
@@ -22,13 +19,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -446.0
+offset_left = -446.5
 offset_top = -131.0
-offset_right = 446.0
+offset_right = 513.5
 offset_bottom = 131.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 48
+theme_override_constants/separation = 70
 
 [node name="Card1" type="Panel" parent="HBoxContainer"]
 custom_minimum_size = Vector2(187, 261)

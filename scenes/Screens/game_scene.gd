@@ -1,27 +1,33 @@
 extends Control
 class_name GameScene
 
-@onready var room_scene: RoomScene = $RoomScene
-@onready var held_card: Panel = $HeldCard
+@onready var room_scene: RoomScene = $MarginContainer/VBoxContainer/RoomScene
+@onready var held_card: Panel = $MarginContainer/VBoxContainer/HBoxContainer3/HeldCard
 const CardSceneScene := preload("res://scenes/Components/CardScene.tscn")
-@onready var health_panel: Panel = $HealthPanel
-@onready var health_label: Label = $HealthPanel/HealthLabel
-@onready var health_rect: ColorRect = $HealthPanel/HealthRect
+@onready var health_panel: Panel = $MarginContainer/VBoxContainer/HealthPanel
+@onready var health_label: Label = $MarginContainer/VBoxContainer/HealthPanel/HealthLabel
+@onready var health_rect: ColorRect = $MarginContainer/VBoxContainer/HealthPanel/HealthRect
+@onready var ghost_rect: ColorRect = $MarginContainer/VBoxContainer/HealthPanel/GhostRect
+
 @onready var game_over_scene: GameOverScene = $GameOverScene
-@onready var ghost_rect: ColorRect = $HealthPanel/GhostRect
-@onready var disabled_panel: Panel = $FleeButton/DisabledPanel
-@onready var texture_container: Control = $HealthPanel/TextureContainer
-@onready var flee_tooltip: Tooltip = $FleeButton/FleeTooltip
-@onready var deck_tooltip: Tooltip = $Deck/DeckTooltip
+
+@onready var disabled_panel: Panel = $MarginContainer/VBoxContainer/HBoxContainer3/FleeButton/DisabledPanel
+@onready var texture_container: Control = $MarginContainer/VBoxContainer/HealthPanel/TextureContainer
+@onready var flee_outer_panel: Panel = $MarginContainer/VBoxContainer/HBoxContainer3/FleeButton/FleeOuterPanel
+
+@onready var flee_tooltip: Tooltip = $MarginContainer/VBoxContainer/HBoxContainer3/FleeButton/FleeTooltip
+@onready var deck_tooltip: Tooltip = $MarginContainer/VBoxContainer/HBoxContainer2/Deck/DeckTooltip
+
 @onready var run_player: AudioStreamPlayer = $runPlayer
-@onready var flee_outer_panel: Panel = $FleeButton/FleeOuterPanel
-@onready var settings_button: TextureButton = $SettingsButton
+
+@onready var settings_button: TextureButton = $MarginContainer/VBoxContainer/HBoxContainer/SettingsButton
 @onready var settings_screen: SettingsScreen = $SettingsScreen
 @onready var tranistion_shader: ColorRect = $TranistionShader
 
-@onready var deck: TextureRect = $Deck
-@onready var flee_button: Button = $FleeButton
-@onready var discard_pile: Panel = $DiscardPile
+@onready var deck: TextureRect = $MarginContainer/VBoxContainer/HBoxContainer2/Deck
+@onready var flee_button: Button = $MarginContainer/VBoxContainer/HBoxContainer3/FleeButton
+@onready var discard_pile: Panel = $MarginContainer/VBoxContainer/HBoxContainer3/DiscardPile
+
 
 @onready var punch_player: AudioStreamPlayer = $PunchPlayer
 @onready var slash_player: AudioStreamPlayer = $SlashPlayer
@@ -33,11 +39,13 @@ const CardSceneScene := preload("res://scenes/Components/CardScene.tscn")
 const attack_button_scene = preload("res://scenes/Components/AttackButtonScene.tscn")
 var selected_card := -1
 var game_loaded := false
-
 func _ready() -> void:
+	await get_tree().process_frame
 	settings_screen.close.connect(func() -> void: settings_screen.visible = false)
 	room_scene.discard_pile = discard_pile
 	room_scene.deck_position = deck.global_position
+	settings_button.pivot_offset = settings_button.size/2
+	flee_button.pivot_offset = flee_button.size/2
 	if game_loaded:
 		var tween := create_tween()
 		tranistion.modulate.a = 1
