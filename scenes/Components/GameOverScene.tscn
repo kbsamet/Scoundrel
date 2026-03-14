@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://duwo347mx2jgj"]
+[gd_scene load_steps=11 format=3 uid="uid://duwo347mx2jgj"]
 
 [ext_resource type="Script" uid="uid://dtgb60r0v1ook" path="res://scenes/Components/game_over_scene.gd" id="1_7kyk7"]
 [ext_resource type="FontFile" uid="uid://c5ft65lxgn0o3" path="res://fonts/OptimusPrincepsSemiBold2.ttf" id="2_4vbkl"]
@@ -34,41 +34,10 @@ font = SubResource("FontVariation_kmple")
 font_size = 48
 font_color = Color(0.772549, 0.188235, 0.188235, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e5h88"]
-bg_color = Color(0.117647, 0.0235294, 0.0235294, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.419608, 0.101961, 0.101961, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jm1yd"]
-bg_color = Color(0.188235, 0.0392157, 0.0392157, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.419608, 0.101961, 0.101961, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujjoi"]
-bg_color = Color(0.117647, 0.0235294, 0.0235294, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.164706, 0.141176, 0.0941176, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[sub_resource type="LabelSettings" id="LabelSettings_lsfja"]
+font = SubResource("FontVariation_kmple")
+font_size = 42
+font_color = Color(0.57, 0.1368, 0.1368, 1)
 
 [node name="GameOverScene" type="Control"]
 z_index = 100
@@ -156,7 +125,7 @@ size_flags_vertical = 3
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="ScoreLabel" type="Label" parent="VBoxContainer/HBoxContainer2"]
+[node name="HighScoreText" type="Label" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 text = "High Score:"
 label_settings = SubResource("LabelSettings_17co2")
@@ -186,6 +155,18 @@ label_settings = SubResource("LabelSettings_4vbkl")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Control4" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="NewDifficultyLabel" type="Label" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "New difficulty unlocked !"
+label_settings = SubResource("LabelSettings_lsfja")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="NewRunButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 8
@@ -202,9 +183,6 @@ grow_vertical = 2
 theme_override_colors/font_color = Color(0.772549, 0.188235, 0.188235, 1)
 theme_override_fonts/font = ExtResource("2_4vbkl")
 theme_override_font_sizes/font_size = 48
-theme_override_styles/focus = SubResource("StyleBoxFlat_e5h88")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_jm1yd")
-theme_override_styles/normal = SubResource("StyleBoxFlat_e5h88")
 text = "New Run"
 metadata/_edit_use_anchors_ = true
 
@@ -224,7 +202,6 @@ grow_vertical = 2
 theme_override_colors/font_color = Color(0.529412, 0.529412, 0.529412, 1)
 theme_override_fonts/font = ExtResource("2_4vbkl")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("StyleBoxFlat_ujjoi")
 text = "Main Menu"
 
 [node name="Transition" type="ColorRect" parent="."]

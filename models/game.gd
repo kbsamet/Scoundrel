@@ -9,6 +9,8 @@ var held_weapon_monster_amt := 0
 var high_score := SaveManager.load_score()
 var game_state := GameState.ANIMATING
 var fast_mode := false
+var difficulty := "Beginner"
+var potion_used := false
 
 enum GameState {ANIMATING,PLAYING}
 
@@ -19,7 +21,7 @@ func set_state(state : GameState) -> void:
 	game_state = state
 
 func reset() -> void:
-	health = 20
+	health = 20 if difficulty != "Condemned" else 15
 	deck = []
 	flee_available = true
 	held_weapon_max_dmg = INF
@@ -28,18 +30,34 @@ func reset() -> void:
 	high_score = SaveManager.load_score()
 	for i in range(2,15):
 		for k in range(0,4):
-			if (k == 1 or k == 3) and i > 10:
-				continue
+			if difficulty != "Beginner":
+				if (k == 1 or k == 3) and i > 10:
+					continue
+				if difficulty == "Condemned":
+					if (k == 1 or k == 3) and i > 8:
+						continue
 			deck.append(Card.create(i,Card.card_suit.values()[k]))
 	deck.shuffle()
 
 func calculate_score(won: bool) -> int:
 	var score := 208
+	
 	if won:
 		return score + health
 	for card in deck:
 		if card.type == Card.card_type.ENEMY:
 			score -= card.rank
+	
+	match difficulty:
+		"Beginner":
+			score = score * 0.5
+		"Standard":
+			score = score * 0.7
+		"Veteran":
+			score = score * 1
+		"Condemned":
+			score = score * 1.5
+			
 	return score
 
 func draw_card() -> Card:

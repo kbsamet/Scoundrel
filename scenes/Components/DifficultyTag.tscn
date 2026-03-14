@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=3 uid="uid://dssu43dyvgdth"]
+
+[ext_resource type="Script" uid="uid://cfcwdhajnsonl" path="res://scenes/Components/difficulty_tag.gd" id="1_7xexd"]
+[ext_resource type="FontFile" uid="uid://c5ft65lxgn0o3" path="res://fonts/OptimusPrincepsSemiBold2.ttf" id="1_caf5y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7xexd"]
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.19, 0.16492, 0.1273, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_7xexd"]
+base_font = ExtResource("1_caf5y")
+
+[node name="Panel" type="Panel"]
+custom_minimum_size = Vector2(150, 50)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_7xexd")
+script = ExtResource("1_7xexd")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -35.5
+offset_top = -19.6667
+offset_right = 35.5
+offset_bottom = 19.6667
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = SubResource("FontVariation_7xexd")
+theme_override_font_sizes/font_size = 32
+text = "20 Health"
+horizontal_alignment = 1
+vertical_alignment = 1

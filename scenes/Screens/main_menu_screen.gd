@@ -6,7 +6,7 @@ extends Control
 @onready var settings_screen: SettingsScreen = $SettingsScreen
 @onready var replay_tutorial_button: Button = $MarginContainer/VBoxContainer/HBoxContainer/ReplayTutorialButton
 
-var gameScene : PackedScene = load("res://scenes/Screens/GameScene.tscn")
+var gameScene : PackedScene = load("res://scenes/Screens/DifficultySelectScreen.tscn")
 
 
 func _ready() -> void:

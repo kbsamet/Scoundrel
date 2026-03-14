@@ -146,7 +146,11 @@ func make_card_move(id : int, secondary_attack : bool = false) -> void:
 	elif id_card.type == Card.card_type.POTION:
 		drink_player.play()
 		var card := await room_scene.remove_card(id)
-		Game.heal(card.rank)
+		Game.potion_used = true
+		if Game.difficulty == "Veteran" or Game.difficulty == "Condemned":
+			Game.heal(0 if Game.potion_used else card.rank)
+		else:
+			Game.heal(card.rank)
 		update_health()
 	else:
 		if room_scene.get_card(id).rank > Game.held_weapon_max_dmg and !secondary_attack:
@@ -180,7 +184,7 @@ func make_card_move(id : int, secondary_attack : bool = false) -> void:
 	if room_scene.get_card_count() == 1:
 		fill_room()
 		if Game.deck.size() == 0:
-			deck.visible = false
+			deck.modulate.a = 0
 			for i in range(4):
 				if room_scene.get_card(i) != null:
 					await room_scene.remove_card(i)
@@ -274,6 +278,7 @@ func disabled_attack_pressed() -> void:
 			
 			
 func fill_room() -> bool:
+	Game.potion_used = false
 	var card_drawn := false
 	for i in range(4):
 		if room_scene.get_card(i) == null:

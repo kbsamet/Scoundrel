@@ -1,6 +1,7 @@
 extends Resource
 class_name SaveManager
 const SAVE_PATH = "user://save.cfg"
+const UNLOCK_PATH = "user://unlocks.cfg"
 const SETTINGS_PATH = "user://save.cfg"
 
 const TUTORIAL_PATH = "user://tutorial.cfg"
@@ -15,6 +16,21 @@ static func load_score() -> int:
 	if config.load("user://save.cfg") == OK:
 		return config.get_value("data", "high_score", 0)
 	return 0
+	
+
+static func unlock_difficulty(difficulty: String) -> void:
+	var config := ConfigFile.new()
+	config.load(UNLOCK_PATH)
+	var unlocked: Array = config.get_value("unlocks", "difficulties", ["Beginner", "Standard"])
+	if difficulty not in unlocked:
+		unlocked.append(difficulty)
+	config.set_value("unlocks", "difficulties", unlocked)
+	config.save(UNLOCK_PATH)
+
+static func get_unlocked_difficulties() -> Array:
+	var config := ConfigFile.new()
+	config.load(UNLOCK_PATH)
+	return config.get_value("unlocks", "difficulties", ["Beginner", "Standard"])
 
 static func save_tutorial_seen() -> void:
 	var config := ConfigFile.new()
@@ -62,9 +78,13 @@ static func save_run(game_scene: GameScene) -> void:
 	config.set_value("run", "flee_available",            Game.flee_available)
 	config.set_value("run", "held_weapon_max_dmg",       Game.held_weapon_max_dmg)
 	config.set_value("run", "held_weapon_monster_amt",   Game.held_weapon_monster_amt)
+	config.set_value("run", "difficulty",                Game.difficulty)
+	config.set_value("run", "potion_used",               Game.potion_used)
 	print("saved run info")
 	var held_card_data : Array = []
 	var held_card := game_scene.held_card
+	if held_card == null:
+		return
 	if held_card.get_child_count() != 0:
 		var held_card_weapon : Card = held_card.get_child(0).card
 		held_card_data.append([held_card_weapon.rank,held_card_weapon.suit])
@@ -103,6 +123,8 @@ static func load_run(game_scene: GameScene) -> bool:
 	Game.flee_available          = config.get_value("run", "flee_available",          true)
 	Game.held_weapon_max_dmg     = config.get_value("run", "held_weapon_max_dmg",     INF)
 	Game.held_weapon_monster_amt = config.get_value("run", "held_weapon_monster_amt", 0)
+	Game.held_weapon_monster_amt = config.get_value("run", "difficulty", "Standard")
+	Game.held_weapon_monster_amt = config.get_value("run", "potion_used", false)
 
 	# ── Deck ───────────────────────────────────────
 	var deck_data : Array = config.get_value("run", "deck", [])

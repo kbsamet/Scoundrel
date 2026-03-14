@@ -31,9 +31,15 @@ func set_data(card: Card, held_card: Card) -> void:
 			single_icon.visible = true
 		Card.card_type.POTION:
 			first_option.first.texture = load("res://sprites/potion.png")
-			first_option.amount.text = "+" + str(card.rank)
-			first_option.health_diff_panel.visible = true
-			first_option.set_health_rects(card.rank)
+			if Game.difficulty == "Veteran" or Game.difficulty == "Condemned":
+				var amt := 0 if Game.potion_used else card.rank
+				first_option.amount.text = "+" + str(amt)
+				first_option.health_diff_panel.visible = true
+				first_option.set_health_rects(amt)
+			else:
+				first_option.amount.text = "+" + str(card.rank)
+				first_option.health_diff_panel.visible = true
+				first_option.set_health_rects(card.rank)
 		Card.card_type.ENEMY:
 			if held_card == null:
 				first_option.first.texture = load("res://sprites/fist.png")

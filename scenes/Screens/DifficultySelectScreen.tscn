@@ -1,0 +1,148 @@
+[gd_scene load_steps=13 format=3 uid="uid://dpsv8o4e2nv7l"]
+
+[ext_resource type="Script" uid="uid://n8l3wbhnkxpc" path="res://scenes/Screens/difficulty_select_screen.gd" id="1_5p0kw"]
+[ext_resource type="Shader" uid="uid://dq0ismthqwwew" path="res://scenes/Screens/Wood.gdshader" id="1_pyh4m"]
+[ext_resource type="Texture2D" uid="uid://d21u3jweb48bc" path="res://sprites/wood.jpg" id="2_df08l"]
+[ext_resource type="FontFile" uid="uid://bfjkwiax0vix" path="res://fonts/OptimusPrincepsSemiBold3.ttf" id="3_5p0kw"]
+[ext_resource type="FontFile" uid="uid://c5ft65lxgn0o3" path="res://fonts/OptimusPrincepsSemiBold2.ttf" id="5_5p0kw"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_juslf"]
+shader = ExtResource("1_pyh4m")
+shader_parameter/vignette_strength = 4.0
+shader_parameter/brightness = 0.965
+shader_parameter/tint = Color(0.11, 0.08712, 0.0814, 1)
+shader_parameter/tint_amount = 0.678
+
+[sub_resource type="FontVariation" id="FontVariation_df08l"]
+base_font = ExtResource("3_5p0kw")
+spacing_glyph = 4
+
+[sub_resource type="LabelSettings" id="LabelSettings_l8hng"]
+font = SubResource("FontVariation_df08l")
+font_size = 120
+font_color = Color(0.788235, 0.627451, 0.376471, 1)
+outline_size = 6
+outline_color = Color(0.541176, 0.392157, 0.156863, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_r3tir"]
+color = Color(0.180392, 0.12549, 0.0627451, 1)
+thickness = 2
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_wifrk"]
+color = Color(0.180392, 0.12549, 0.0627451, 1)
+thickness = 2
+
+[sub_resource type="FontVariation" id="FontVariation_juslf"]
+base_font = ExtResource("5_5p0kw")
+spacing_glyph = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l8hng"]
+bg_color = Color(0.12, 0.087, 0.06, 0.541176)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.164706, 0.141176, 0.0941176, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="DifficultySelectScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5p0kw")
+
+[node name="Bg" type="Sprite2D" parent="."]
+modulate = Color(0.521569, 0.227451, 0.231373, 1)
+material = SubResource("ShaderMaterial_juslf")
+position = Vector2(524, 944)
+scale = Vector2(0.896645, 0.892287)
+texture = ExtResource("2_df08l")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 60
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Select Difficulty"
+label_settings = SubResource("LabelSettings_l8hng")
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="Control" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ColorRect" type="HSeparator" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+offset_right = 516.0
+offset_bottom = 16.0
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxLine_r3tir")
+
+[node name="ColorRect3" type="ColorRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+offset_left = 526.0
+offset_right = 534.0
+offset_bottom = 8.0
+rotation = 0.785398
+pivot_offset = Vector2(8, 8)
+color = Color(0.180392, 0.12549, 0.0627451, 1)
+
+[node name="ColorRect2" type="HSeparator" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+offset_left = 552.0
+offset_right = 1060.0
+offset_bottom = 16.0
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxLine_wifrk")
+
+[node name="Control2" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="Control3" type="Control" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(450, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.521569, 0.392157, 0.282353, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.521569, 0.392157, 0.282353, 1)
+theme_override_colors/font_hover_color = Color(0.521569, 0.392157, 0.282353, 1)
+theme_override_colors/font_outline_color = Color(0.521569, 0.392157, 0.282353, 1)
+theme_override_colors/font_color = Color(0.52, 0.392427, 0.2808, 1)
+theme_override_colors/font_focus_color = Color(0.521569, 0.392157, 0.282353, 1)
+theme_override_colors/font_pressed_color = Color(0.521569, 0.392157, 0.282353, 1)
+theme_override_fonts/font = SubResource("FontVariation_juslf")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/focus = SubResource("StyleBoxFlat_l8hng")
+theme_override_styles/normal = SubResource("StyleBoxFlat_l8hng")
+text = "Back"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

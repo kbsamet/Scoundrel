@@ -8,20 +8,36 @@ class_name GameOverScene
 @onready var shader_rect: ColorRect = $ShaderRect
 @onready var new_run_button: Button = $NewRunButton
 @onready var main_menu_button: Button = $MainMenuButton
+@onready var high_score_text: Label = $VBoxContainer/HBoxContainer2/HighScoreText
+@onready var new_difficulty_label: Label = $VBoxContainer/NewDifficultyLabel
 
 @onready var new_high_score_label: Label = $VBoxContainer/NewHighScoreLabel
 
-var gameScene : PackedScene = load("res://scenes/Screens/GameScene.tscn")
+var gameScene : PackedScene = load("res://scenes/Screens/DifficultySelectScreen.tscn")
 var mainMenuScene : PackedScene = load("res://scenes/Screens/MainMenuScreen.tscn")
+
 
 
 func set_data(won: bool, score: int) -> void:
 	if won:
 		label.text = "Victorious"
 		label.label_settings.font_color = Color("c9a060")
+		new_difficulty_label.label_settings.font_color = Color("c9a060")
 		score_label.label_settings.font_color = Color("c9a060")
 		high_score_label.label_settings.font_color = Color("c9a060")
 		shader_rect.material.set_shader_parameter("tint", Color("c9a060"))
+		
+		var unlocked : = SaveManager.get_unlocked_difficulties()
+		
+		match Game.difficulty:
+			"Standard":
+				if "Veteran" not in unlocked:
+					new_difficulty_label.visible = true
+					SaveManager.unlock_difficulty("Veteran")
+			"Veteran":
+				if "Condemned" not in unlocked:
+					new_difficulty_label.visible = true
+					SaveManager.unlock_difficulty("Condemned")
 	else:
 		label.text = "Slain"
 		label.label_settings.font_color = Color("c43030")
@@ -34,6 +50,7 @@ func set_data(won: bool, score: int) -> void:
 
 	if score >= Game.high_score:
 		SaveManager.save_score(score)
+		high_score_text.text = "Previous High Score:"
 		new_high_score_label.visible = true
 
 	var accent := Color("c9a060") if won else Color("c43030")
@@ -60,16 +77,17 @@ func _style_buttons(accent: Color, accent_dim: Color) -> void:
 		normal.corner_radius_bottom_right = 2
 
 		var hover := normal.duplicate() as StyleBoxFlat
-		hover.bg_color = accent_dim.lightened(0.05) if is_primary else Color("0e0c04")
+		hover.bg_color = accent_dim.lightened(0.05) 
 
 		var pressed := normal.duplicate() as StyleBoxFlat
-		pressed.bg_color = accent_dim.darkened(0.1) if is_primary else Color("111008")
+		pressed.bg_color = accent_dim.lightened(0.05)
 
 		for state : String in ["normal", "hover", "pressed", "focus"]:
 			btn.add_theme_stylebox_override(state,
 				normal if state == "normal" else
 				hover if state == "hover" else
 				pressed if state == "pressed" else
+				pressed if state == "focus" else
 				normal)
 
 		var font_color := accent if is_primary else Color("878787")

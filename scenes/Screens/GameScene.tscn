@@ -1,11 +1,10 @@
-[gd_scene load_steps=35 format=3 uid="uid://cafaeua3q5u4k"]
+[gd_scene load_steps=34 format=3 uid="uid://cafaeua3q5u4k"]
 
 [ext_resource type="Script" uid="uid://ctinpnkkwpm35" path="res://scenes/Screens/game_scene.gd" id="1_ax3qu"]
 [ext_resource type="Texture2D" uid="uid://d21u3jweb48bc" path="res://sprites/wood.jpg" id="2_ax3qu"]
 [ext_resource type="Shader" uid="uid://dq0ismthqwwew" path="res://scenes/Screens/Wood.gdshader" id="2_hqe0l"]
 [ext_resource type="PackedScene" uid="uid://b05w2ej50rtaj" path="res://scenes/Components/RoomScene.tscn" id="3_tlyhp"]
 [ext_resource type="StyleBox" uid="uid://dj47o651rk7oq" path="res://themes/RoomScene.tres" id="4_yd5jp"]
-[ext_resource type="FontFile" uid="uid://b477vgsbu4t3l" path="res://fonts/OptimusPrincepsSemiBold.ttf" id="5_8x11w"]
 [ext_resource type="StyleBox" uid="uid://0kmtnrdyjsrx" path="res://themes/FleeButton.tres" id="5_fwyns"]
 [ext_resource type="Texture2D" uid="uid://gldbfojw0vam" path="res://sprites/run.png" id="5_llxvm"]
 [ext_resource type="StyleBox" uid="uid://iong458yhfhw" path="res://themes/AttackButtonPanel.tres" id="6_0y3wm"]
@@ -58,7 +57,7 @@ color_ramp = SubResource("Gradient_4p2y1")
 noise = SubResource("FastNoiseLite_gr1j8")
 
 [sub_resource type="LabelSettings" id="LabelSettings_7s5hy"]
-font = ExtResource("5_8x11w")
+font = ExtResource("16_qv8uk")
 font_size = 48
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7s5hy"]
@@ -125,7 +124,7 @@ mouse_filter = 2
 theme_override_constants/margin_left = 60
 theme_override_constants/margin_top = 90
 theme_override_constants/margin_right = 60
-theme_override_constants/margin_bottom = 150
+theme_override_constants/margin_bottom = 300
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
@@ -216,7 +215,7 @@ label_settings = SubResource("LabelSettings_7s5hy")
 horizontal_alignment = 1
 
 [node name="Control" type="Control" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 86)
 layout_mode = 2
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
