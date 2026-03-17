@@ -23,10 +23,10 @@ border_color = Color(1, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_efa6e"]
 bg_color = Color(0.231373, 0.231373, 0.231373, 0.721569)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+corner_radius_top_left = 999
+corner_radius_top_right = 999
+corner_radius_bottom_right = 999
+corner_radius_bottom_left = 999
 
 [node name="AttackOptionScene" type="Panel"]
 custom_minimum_size = Vector2(250, 70)

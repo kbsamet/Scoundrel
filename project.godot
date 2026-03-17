@@ -14,7 +14,9 @@ config/name="Scoundrel"
 run/main_scene="uid://s5rrl6a7duld"
 config/features=PackedStringArray("4.4", "Mobile")
 run/max_fps=60
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0.0862745, 0.0431373, 0.0352941, 1)
+boot_splash/image="uid://sfvfcs2na411"
+config/icon="uid://sfvfcs2na411"
 
 [autoload]
 
@@ -37,6 +39,10 @@ window/handheld/orientation=1
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://localization.en.translation", "res://localization.tr.translation")
 
 [physics]
 

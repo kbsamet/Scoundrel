@@ -1,0 +1,56 @@
+keys,en,tr
+Scoundrel,Scoundrel,Scoundrel
+Continue Run,Continue Run,Devam Et
+Start New Run,Start New Run,Yeni Oyun Başlat
+Replay Tutorial,Replay Tutorial,Rehberi Tekrarla
+Settings,Settings,Ayarlar
+X,X,X
+Sound Effects,Sound Effects,Ses Efektleri
+100,100,100
+Animation Speed,Animation Speed,Animasyon Hızı
+Normal,Normal,Normal
+Fast,Fast,Hızlı
+Abandon Run,Abandon Run,Oyunu Bırak
+Tap to Confirm,Tap to Confirm,Onaylamak için Tıkla
+Reset Save,Reset Settings,Ayarları Sıfırla
+Select Difficulty,Select Difficulty,Zorluk Seç
+Back,Back,Geri
+Squire,Squire,Asker
+Rogue,Rogue,Hırsız
+Villain,Villain,Kötü Niyetli
+Beginner,Beginner,Başlangıç
+Standard,Standard,Standart
+Veteran,Veteran,Deneyimli
+Condemned,Condemned,Mahkum
+Start with 20 HP,Start with 20 HP,20 Can ile Başla
+Start with 15 HP,Start with 15 HP,15 Can ile Başla
+No Potion Limit,No Potion Limit,İksir Sınırı Yok
+Easier Deck,Easier Deck,Daha Kolay Deste
+One Potion Per Room,One Potion Per Room,Oda Başına Bir İksir
+Standard deck,Standard deck,Standart Deste
+Harder Deck,Harder Deck,Daha Zor Deste
+Health,Health,Can
+20 / 20,20 / 20,20 / 20
+Flee,Flee,Kaç
+Reset (Debug),Reset (Debug),Sıfırla (Hata Ayıklama)
+Slain,Slain,Öldün
+Victorious,Victorious,Zafer
+Score:,Score:,Skor:
+High Score:,High Score:,En Yüksek Skor:
+New High Score !,New High Score !,Yeni Yüksek Skor !
+New difficulty unlocked !,New difficulty unlocked !,Yeni Zorluk Seviyesi Açıldı !
+New Run,New Run,Yeni Oyun
+Main Menu,Main Menu,Ana Menü
+Previous High Score:,Previous High Score:,Önceki En Yüksek Skor:
+tutorial_potion,Hearts are healing potions.\nTap to restore health,Kupa kartları iyileştirici iksirlerdir.\nCanını yenilemek için tıkla.
+tutorial_monster_bare,Clubs and Spades are monsters.\nTap and attack with your fists.,Sinek ve Maça kartları canavarlardır.\nTıkla ve yumruklarınla saldır.
+tutorial_room_clear,Move on to the next room\nwhen there is only 1 card left.\nTap and attack to move on.,Yalnızca 1 kart kaldığında sonraki odaya geçersin.\nSaldırarak ilerlemeye devam et.
+tutorial_weapon_equip,Diamonds are weapons.\nThey reduce monster damage.\nTap and equip.,Karolar silahlarıdır.\nCanavar hasarını azaltırlar.\nTıkla ve kuşan.
+tutorial_monster_weapon,Use your weapon to kill this monster.\nTap and select weapon.,Bu canavar öldürmek için silahını kullan.\nTıkla ve silahı seç.
+tutorial_weapon_degraded,Weapons can't hit monsters\n stronger than its last kill.,Silahlar ile son öldürdüğünden daha güçlü canavarlara saldıramazsın.
+tutorial_weapon_degraded_fists,You can still use your fists to kill it.\nTap and select fists.,Yine de öldürmek için yumruklarını kullanabilirsin.\nTıkla ve yumruk seç.
+tutorial_flee,Too dangerous? Flee the room.\nYou can't flee two rooms in a row.,Oda çok tehlikeli ise kaçabilirsin.\nArka arkaya iki odadan kaçamazsın.
+tutorial_done,Defeat all the cards in the deck to win.\nGood luck.,Kazanmak için destedeki tüm kartları yen.\nİyi şanslar.
+20 Health,20 Health,20 Can
+Tutorial Completed,Tutorial Completed,Rehber Tamamlandı
+Click restart to start the real run.,Click restart to start the real run.,Gerçek oyunu başlatmak için yeniden başlatmaya tıklayın.

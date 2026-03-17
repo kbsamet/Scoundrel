@@ -59,6 +59,7 @@ func _ready() -> void:
 		set_flee_disabled(!Game.flee_available)
 		await get_tree().create_timer(0.5).timeout
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), false)
+		room_scene.deck_position = deck.global_position
 		return
 	Game.reset()
 	set_flee_disabled(false)
@@ -85,23 +86,23 @@ func _notification(what: int) -> void:
 func _on_tutorial_step() -> void:
 	match TutorialManager.current_step:
 		TutorialManager.Step.POTION:
-			room_scene.card_slots[1].get_child(0).show_tutorial_tip("Hearts are healing potions.\nTap to restore health")
+			room_scene.card_slots[1].get_child(0).show_tutorial_tip(tr("tutorial_potion"))
 		TutorialManager.Step.MONSTER_BARE:
-			room_scene.card_slots[0].get_child(0).show_tutorial_tip("Clubs and Spades are monsters.\nTap and attack with your fists.")
+			room_scene.card_slots[0].get_child(0).show_tutorial_tip(tr("tutorial_monster_bare"))
 		TutorialManager.Step.ROOM_CLEAR:
-			room_scene.card_slots[2].get_child(0).show_tutorial_tip("Move on to the next room\nwhen there is only 1 card left.\nTap and attack to move on.")
+			room_scene.card_slots[2].get_child(0).show_tutorial_tip(tr("tutorial_room_clear"))
 		TutorialManager.Step.WEAPON_EQUIP:
-			room_scene.card_slots[0].get_child(0).show_tutorial_tip("Diamonds are weapons.\nThey reduce monster damage.\nTap and equip.")
+			room_scene.card_slots[0].get_child(0).show_tutorial_tip(tr("tutorial_weapon_equip"))
 		TutorialManager.Step.MONSTER_WEAPON:
-			room_scene.card_slots[1].get_child(0).show_tutorial_tip("Use your weapon to kill this monster.\nTap and select weapon.")
+			room_scene.card_slots[1].get_child(0).show_tutorial_tip(tr("tutorial_monster_weapon"))
 		TutorialManager.Step.WEAPON_DEGRADED:
-			held_card.get_child(0).show_tutorial_tip("Weapons can't hit monsters\n stronger than its last kill.")
-			room_scene.card_slots[2].get_child(0).show_tutorial_tip("You can still use your fists to kill it.\nTap and select fists.")
+			held_card.get_child(0).show_tutorial_tip(tr("tutorial_weapon_degraded"))
+			room_scene.card_slots[2].get_child(0).show_tutorial_tip(tr("tutorial_weapon_degraded_fists"))
 		TutorialManager.Step.FLEE:
-			flee_tooltip.show_tip("Too dangerous? Flee the room.\nYou can't flee two rooms in a row.")
+			flee_tooltip.show_tip(tr("tutorial_flee"))
 			set_flee_disabled(false)
 		TutorialManager.Step.DONE:
-			deck_tooltip.show_tip("Defeat all the cards in the deck to win.\nGood luck.")
+			deck_tooltip.show_tip(tr("tutorial_done"))
 			
 
 func card_clicked(id : int) -> void:
@@ -137,7 +138,8 @@ func make_card_move(id : int, secondary_attack : bool = false) -> void:
 		await discard_held_card()
 		equip_player.play()
 		var card := await room_scene.remove_card(id,false)
-		var card_scene : CardScene = CardSceneScene.instantiate()	
+		var card_scene : CardScene = CardSceneScene.instantiate()
+
 		held_card.add_child(card_scene)
 		card_scene.global_position = room_scene.card_slots[id].global_position
 		card_scene.setup(card,-1)
@@ -145,12 +147,14 @@ func make_card_move(id : int, secondary_attack : bool = false) -> void:
 
 	elif id_card.type == Card.card_type.POTION:
 		drink_player.play()
+		if room_scene.card_slots[id].get_child(0).clicked.is_connected(card_clicked):
+			room_scene.card_slots[id].get_child(0).clicked.disconnect(card_clicked)
 		var card := await room_scene.remove_card(id)
-		Game.potion_used = true
 		if Game.difficulty == "Veteran" or Game.difficulty == "Condemned":
 			Game.heal(0 if Game.potion_used else card.rank)
 		else:
 			Game.heal(card.rank)
+		Game.potion_used = true
 		update_health()
 	else:
 		if room_scene.get_card(id).rank > Game.held_weapon_max_dmg and !secondary_attack:

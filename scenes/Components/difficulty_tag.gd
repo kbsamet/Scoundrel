@@ -6,6 +6,7 @@ enum TagLevel {EASY,NORMAL,HARD}
 @onready var label: Label = $Label
 
 func set_data(text: String, level: TagLevel) -> void:
+	
 	label.text = text
 	await get_tree().process_frame
 
@@ -46,3 +47,4 @@ func set_data(text: String, level: TagLevel) -> void:
 	# Fit minimum size to label + margins
 	var label_size := label.get_minimum_size()
 	custom_minimum_size = label_size + Vector2(40, 8)
+	visible = true

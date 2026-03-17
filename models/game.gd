@@ -15,13 +15,21 @@ var potion_used := false
 enum GameState {ANIMATING,PLAYING}
 
 func _ready() -> void:
+	match OS.get_locale_language():
+		"en":
+			TranslationServer.set_locale("en")
+		"tr":
+			TranslationServer.set_locale("tr")
+		_:
+			TranslationServer.set_locale("en")
+			
 	fast_mode = SaveManager.load_settings()["anim_speed"] == 1
 
 func set_state(state : GameState) -> void:
 	game_state = state
 
 func reset() -> void:
-	health = 20 if difficulty != "Condemned" else 15
+	health = 20
 	deck = []
 	flee_available = true
 	held_weapon_max_dmg = INF

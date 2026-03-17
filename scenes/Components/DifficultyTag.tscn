@@ -14,6 +14,7 @@ border_color = Color(0.19, 0.16492, 0.1273, 1)
 base_font = ExtResource("1_caf5y")
 
 [node name="Panel" type="Panel"]
+visible = false
 custom_minimum_size = Vector2(150, 50)
 anchors_preset = 15
 anchor_right = 1.0
@@ -38,7 +39,7 @@ offset_bottom = 19.6667
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = SubResource("FontVariation_7xexd")
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 42
 text = "20 Health"
 horizontal_alignment = 1
 vertical_alignment = 1

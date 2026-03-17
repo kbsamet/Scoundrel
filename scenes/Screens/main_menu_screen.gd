@@ -7,7 +7,7 @@ extends Control
 @onready var replay_tutorial_button: Button = $MarginContainer/VBoxContainer/HBoxContainer/ReplayTutorialButton
 
 var gameScene : PackedScene = load("res://scenes/Screens/DifficultySelectScreen.tscn")
-
+var gamePlayScene : PackedScene = load("res://scenes/Screens/GameScene.tscn")
 
 func _ready() -> void:
 	if SaveManager.has_active_run():
@@ -19,7 +19,7 @@ func _ready() -> void:
 
 func _on_continue_run_button_pressed() -> void:
 	print("loading run")
-	var scene := gameScene.instantiate()
+	var scene := gamePlayScene.instantiate()
 	scene.game_loaded = true
 	var old_scene := get_tree().current_scene
 	get_tree().root.add_child(scene)
@@ -52,4 +52,5 @@ func _on_continue_run_button_button_up() -> void:
 
 func _on_replay_tutorial_button_pressed() -> void:
 	SaveManager.reset_tutorial()
-	_on_new_run_button_pressed()
+	Game.difficulty = "Beginner"
+	get_tree().change_scene_to_packed(gamePlayScene)

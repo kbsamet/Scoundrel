@@ -110,6 +110,8 @@ func _on_fast_speed_button_pressed() -> void:
 
 func _on_reset_save_pressed() -> void:
 	if !reset_save_armed:
+		abandon_run_armed = false
+		abandon_run.text = "Abandon Run"
 		reset_save.text = "Tap to Confirm"
 		reset_save_armed = true
 		await get_tree().create_timer(2).timeout
@@ -125,6 +127,8 @@ func _on_reset_save_pressed() -> void:
 
 func _on_abandon_run_pressed() -> void:
 	if !abandon_run_armed:
+		reset_save_armed = false
+		reset_save.text = "Reset Save"
 		abandon_run.text = "Tap to Confirm"
 		abandon_run_armed = true
 		await get_tree().create_timer(2).timeout

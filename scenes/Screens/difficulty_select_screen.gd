@@ -50,7 +50,7 @@ const DIFFICULTY_DATA := {
 		"accent_dim": Color("#200808"),
 		"border": Color("#5a1818"),
 		"tags": [
-			["Start with 15 HP",        DifficultyTag.TagLevel.HARD],
+			["Start with 20 HP",   DifficultyTag.TagLevel.NORMAL],
 			["One Potion Per Room",     DifficultyTag.TagLevel.HARD],
 			["Harder Deck",             DifficultyTag.TagLevel.HARD],
 		]

@@ -418,12 +418,12 @@ theme_override_font_sizes/font_size = 32
 text = "Reset (Debug)"
 
 [node name="Tranistion" type="ColorRect" parent="."]
+modulate = Color(0.11, 0.07304, 0.0572, 0)
 z_index = 100
 layout_mode = 0
 offset_right = 1085.0
 offset_bottom = 2149.0
 mouse_filter = 2
-color = Color(1, 1, 1, 0)
 
 [node name="TranistionShader" type="ColorRect" parent="."]
 z_index = 100
