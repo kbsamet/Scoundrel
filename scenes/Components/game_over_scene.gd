@@ -6,6 +6,8 @@ signal revived
 
 ## How far New Run / Main Menu move down to make room for the Revive button.
 const REVIVE_BUTTON_SHIFT := 132.0
+## Space between the Revive button's left edge and its clapperboard icon.
+const REVIVE_ICON_PADDING := 36.0
 @onready var transition: ColorRect = $Transition
 
 @onready var label: Label = $Label
@@ -116,8 +118,10 @@ func _on_revive_button_pressed() -> void:
 			revived.emit()
 		AdManager.Result.FAILED:
 			revive_button.text = tr("revive_unavailable")
+			AdManager.preload_rewarded_ad() # Have one ready if they try again.
 		_:
 			_update_revive_text()
+			AdManager.preload_rewarded_ad() # The ad was used up; the revive wasn't.
 
 func _style_buttons(accent: Color, accent_dim: Color) -> void:
 	for btn : Button in [revive_button, new_run_button, main_menu_button]:
@@ -134,6 +138,8 @@ func _style_buttons(accent: Color, accent_dim: Color) -> void:
 		normal.corner_radius_top_right = 2
 		normal.corner_radius_bottom_left = 2
 		normal.corner_radius_bottom_right = 2
+		if btn == revive_button:
+			normal.content_margin_left = REVIVE_ICON_PADDING
 
 		var hover := normal.duplicate() as StyleBoxFlat
 		hover.bg_color = accent_dim.lightened(0.05) 

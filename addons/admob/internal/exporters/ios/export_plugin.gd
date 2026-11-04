@@ -87,7 +87,7 @@ func _export_begin(features: PackedStringArray, is_debug: bool, path: String, fl
 
 func _export_library(lib: Library, config: EditorExportPlugin, is_debug: bool) -> void:
 	var binary_base := config.get_binary_path() as String
-	var base_dir := Library.ROOT_BIN_PATH.path_join(lib.path)
+	var base_dir := lib.get_base_path()
 	var file_path := base_dir.path_join(binary_base.get_base_dir())
 	var file_name := binary_base.get_file().get_basename()
 	var extension := binary_base.get_extension()
@@ -159,31 +159,60 @@ func _register_cpp_initialization(enabled_libs: Array[Library]) -> void:
 		init_calls += "\t%s();\n" % init_method
 		deinit_calls += "\t%s();\n" % deinit_method
 
+	var version_info := Engine.get_version_info()
+	var uses_legacy_ios_entrypoint: bool = (
+		version_info.major < 4
+		or (version_info.major == 4 and version_info.minor <= 4)
+	)
+	var init_entrypoint := (
+		"godot_ios_plugins_initialize"
+		if uses_legacy_ios_entrypoint
+		else "godot_apple_embedded_plugins_initialize"
+	)
+	var deinit_entrypoint := (
+		"godot_ios_plugins_deinitialize"
+		if uses_legacy_ios_entrypoint
+		else "godot_apple_embedded_plugins_deinitialize"
+	)
+
+	# The macro renames Godot's initializer, which is generated after this block.
+	# Our wrapper registers AdMob first and then calls the renamed initializer so
+	# built-in plugins such as Game Center remain registered as well.
 	var cpp_code := """
-{definition_code}
+%s
+extern void %s_admob();
+extern void %s_admob();
 
-void godot_apple_embedded_plugins_initialize() {{
-{init_calls}
-    extern void godot_apple_embedded_plugins_initialize_admob();
-    godot_apple_embedded_plugins_initialize_admob();
-}}
+void %s() {
+%s
+	%s_admob();
+}
 
-void godot_apple_embedded_plugins_deinitialize() {{
-{deinit_calls}
-    extern void godot_apple_embedded_plugins_deinitialize_admob();
-    godot_apple_embedded_plugins_deinitialize_admob();
-}}
+void %s() {
+%s
+	%s_admob();
+}
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmacro-redefined"
-#define godot_apple_embedded_plugins_initialize godot_apple_embedded_plugins_initialize_admob
-#define godot_apple_embedded_plugins_deinitialize godot_apple_embedded_plugins_deinitialize_admob
+#define %s %s_admob
+#define %s %s_admob
 #pragma clang diagnostic pop
-""".format({
-		"definition_code": definition_code,
-		"init_calls": init_calls,
-		"deinit_calls": deinit_calls
-	})
+""" % [
+		definition_code,
+		init_entrypoint,
+		deinit_entrypoint,
+		init_entrypoint,
+		init_calls,
+		init_entrypoint,
+		deinit_entrypoint,
+		deinit_calls,
+		deinit_entrypoint,
+		init_entrypoint,
+		init_entrypoint,
+		deinit_entrypoint,
+		deinit_entrypoint,
+	]
 
 	_add_cpp_code(cpp_code)
 
@@ -195,7 +224,9 @@ func _end_generate_apple_embedded_project(path: String, _will_build_archive: boo
 func _export_end() -> void:
 	if _spm_applied or _pending_export_path.is_empty():
 		return
-	_apply_spm(_pending_export_path, true)
+	# Godot 4.4 exits immediately after headless project export, so a deferred
+	# patch can be lost and leave GoogleMobileAds unlinked in the Xcode target.
+	_apply_spm(_pending_export_path, false)
 
 
 func _apply_spm(path: String, defer_patch: bool) -> void:
@@ -281,7 +312,7 @@ import PackageDescription
 
 let package = Package(
     name: "PoingGodotAdMobDeps",
-    platforms: [.iOS(.v15)],
+    platforms: [.iOS(.v14)],
     products: [
         .library(
             name: "PoingGodotAdMobDeps",
@@ -294,10 +325,7 @@ let package = Package(
             name: "PoingGodotAdMobDeps",
             dependencies: [
 %s            ],
-            path: "PoingGodotAdMobDeps",
-            linkerSettings: [
-                .linkedFramework("JavaScriptCore")
-            ]
+            path: "PoingGodotAdMobDeps"
         )
     ]
 )

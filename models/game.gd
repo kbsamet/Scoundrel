@@ -1,7 +1,7 @@
 extends Node
 const MAX_DECK_COUNT = 44
 const MAX_REVIVES := 3
-const REVIVE_HEALTH := 10
+const REVIVE_HEALTH := 20 # Full health
 
 var health := 20
 var deck : Array[Card] = []

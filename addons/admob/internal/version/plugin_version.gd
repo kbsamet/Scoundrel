@@ -20,11 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-const FALLBACK_PLUGIN_VERSION := "v5.1.0"
+const FALLBACK_PLUGIN_VERSION := "v5.0.0"
 
 const PLUGIN_CONFIG_PATH := "res://addons/admob/plugin.cfg"
 const ANDROID_PACKAGE_PATH := "res://addons/admob/android/bin/package.gd"
-const IOS_PACKAGE_PATH := "res://addons/admob/ios/bin/package.gd"
+const IOS_PACKAGE_PATH := "res://ios/plugins/package.gd"
 
 static var _cached_version := ""
 
@@ -103,5 +103,4 @@ static func check_version_mismatch(installed: String, platform: String) -> void:
 		push_error("AdMob %s Export Error: Major version mismatch. Installed %s binaries are version %s, but editor plugin requires version %s. Please open the AdMob Manager inside the editor and re-download/re-install the %s platform binaries." % [platform, platform, installed, current, platform])
 	elif installed.trim_prefix("v") != current.trim_prefix("v"):
 		push_warning("AdMob %s Export Warning: Version mismatch. Installed %s binaries are version %s, but editor plugin version is %s. You may want to update the platform binaries." % [platform, platform, installed, current])
-
 

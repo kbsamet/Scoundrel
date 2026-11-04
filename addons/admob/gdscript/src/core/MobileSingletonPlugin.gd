@@ -36,14 +36,11 @@ static func _get_plugin(plugin_name: String, is_required := true) -> Object:
 		return null
 
 	var location := (
-		"Project Settings (admob/general/android/enabled) and 'Use Gradle Build' is enabled in the Export Preset"
+		"the Project Settings and 'Use Gradle Build' is enabled"
 		if os_name == "Android"
-		else "Project Settings (admob/general/ios/enabled)"
+		else "the 'Plugins' section of the Export tab"
 	)
-	var message := (
-		"[AdMob] Native plugin '%s' not found. Make sure it is enabled in %s."
-		% [plugin_name, location]
-	)
+	var message := plugin_name + " not found, make sure it is enabled in " + location
 
 	if is_required:
 		printerr(message)

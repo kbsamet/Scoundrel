@@ -44,10 +44,10 @@ namespace PoingStudios.AdMob.Core
 			}
 
 			string location = osName == "Android" 
-				? "Project Settings (admob/general/android/enabled) and 'Use Gradle Build' is enabled in the Export Preset" 
-				: "Project Settings (admob/general/ios/enabled)";
+				? "the Project Settings and 'Use Gradle Build' is enabled" 
+				: "the 'Plugins' section of the Export tab";
 			
-			string message = $"[AdMob] Native plugin '{pluginName}' not found. Make sure it is enabled in {location}.";
+			string message = $"{pluginName} not found, make sure it is enabled in {location}";
 
 			if (isRequired)
 			{

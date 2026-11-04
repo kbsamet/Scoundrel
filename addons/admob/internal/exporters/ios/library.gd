@@ -21,6 +21,7 @@
 # SOFTWARE.
 
 const ROOT_BIN_PATH := "res://addons/admob/ios/bin"
+const LEGACY_ADS_BIN_PATH := "res://ios/plugins"
 
 var path: String
 var is_enabled: bool
@@ -32,7 +33,17 @@ func _init(p_path: String, p_is_enabled: bool = true) -> void:
 
 
 func get_config_script_path() -> String:
-	return ROOT_BIN_PATH + "/" + path + "/poing_godot_admob_" + path + ".gd"
+	return get_base_path() + "/poing_godot_admob_" + path + ".gd"
+
+
+func get_base_path() -> String:
+	# This project keeps the installed iOS ads binary under res://ios/plugins.
+	# Prefer that tracked copy so GUI exports work on a fresh checkout too.
+	if path == "ads" and FileAccess.file_exists(
+		LEGACY_ADS_BIN_PATH + "/poing_godot_admob_ads.gd"
+	):
+		return LEGACY_ADS_BIN_PATH
+	return ROOT_BIN_PATH.path_join(path)
 
 
 func get_config() -> EditorExportPlugin:

@@ -57,6 +57,7 @@ func _ready() -> void:
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), true)
 		await SaveManager.load_run(self)
 		update_health()
+		_update_revive_ad_preload()
 		set_flee_disabled(!Game.flee_available)
 		await get_tree().create_timer(0.5).timeout
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), false)
@@ -69,12 +70,23 @@ func _ready() -> void:
 		TutorialManager.start(self)
 		TutorialManager.step_completed.connect(_on_tutorial_step)
 		set_flee_disabled(true)
+	_update_revive_ad_preload()
 	await get_tree().create_timer(1.0).timeout
 	for i in range(4):
 		var card := Game.draw_card()
 		await animate_draw_to_slot(i, card)
 	if TutorialManager.is_active():
 		_on_tutorial_step()
+
+func _exit_tree() -> void:
+	AdManager.discard_preloaded_ad()
+
+## Keeps one revive ad ready while this run can still be revived.
+func _update_revive_ad_preload() -> void:
+	if Game.can_revive() and not TutorialManager.is_active():
+		AdManager.preload_rewarded_ad()
+	else:
+		AdManager.discard_preloaded_ad()
 
 func _notification(what: int) -> void:
 	match what:
@@ -194,6 +206,7 @@ func make_card_move(id : int, secondary_attack : bool = false) -> void:
 				if room_scene.get_card(i) != null:
 					await room_scene.remove_card(i)
 			SaveManager.clear_run()
+			AdManager.discard_preloaded_ad()
 			game_over_scene.visible = true
 			game_over_scene.set_data(true,Game.calculate_score(true))
 	if TutorialManager.is_active():
@@ -461,6 +474,8 @@ func update_health(preview_health: int = -1) -> void:
 		tween.tween_callback(func() -> void: Game.set_state(Game.GameState.PLAYING))
 	if preview_health == -1 and Game.health <= 0:
 		var died_in_tutorial := TutorialManager.is_active()
+		if died_in_tutorial or not Game.can_revive():
+			AdManager.discard_preloaded_ad()
 		SaveManager.clear_run()
 		TutorialManager.active = false
 		game_over_scene.visible = true
@@ -471,6 +486,7 @@ func _on_revived() -> void:
 	game_over_scene.close_for_revive()
 	update_health()
 	SaveManager.save_run(self)
+	_update_revive_ad_preload() # Next ad, if revives are left.
 		
 
 

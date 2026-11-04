@@ -2,9 +2,11 @@ extends Node
 ## Rewarded "revive" ads through AdMob. iOS only for now (the editor uses the
 ## plugin's mock ads so the flow can be tested on desktop).
 ##
-## Ads are requested only when the player asks for one: nothing is preloaded,
-## cached or refreshed in the background. At startup this only gathers consent
-## (UMP) and initializes the SDK, which loads no ads.
+## While a run that can still be revived is active, one rewarded ad is kept
+## preloaded (iOS only) so Revive shows instantly. The game decides when that
+## applies through preload_rewarded_ad() / discard_preloaded_ad(); a failed
+## preload is not retried in the background. At startup this only gathers
+## consent (UMP) and initializes the SDK.
 
 enum Result { REWARDED, NOT_REWARDED, FAILED }
 
@@ -14,6 +16,8 @@ const REVIVE_AD_UNIT_ID := "ca-app-pub-7674772196735378/2415447671"
 const TEST_REWARDED_AD_UNIT_ID := "ca-app-pub-3940256099942544/1712485313"
 const INIT_TIMEOUT_SEC := 5.0
 const LOAD_TIMEOUT_SEC := 15.0
+## Google expires rewarded ads an hour after they load; replace them before that.
+const PRELOAD_MAX_AGE_MSEC := 55 * 60 * 1000
 
 signal initialization_finished
 ## Consent info has been refreshed; the privacy options entry point may have
@@ -21,6 +25,7 @@ signal initialization_finished
 signal privacy_options_changed
 signal _load_finished(ad: RewardedAd)
 signal _show_finished
+signal _preload_finished
 
 var _is_initialized := false
 var _is_initializing := false
@@ -28,6 +33,10 @@ var _is_busy := false
 var _load_request_id := 0
 var _reward_earned := false
 var _show_failed := false
+var _preload_wanted := false
+var _is_preloading := false
+var _preloaded_ad: RewardedAd
+var _preloaded_at_msec := 0
 
 
 func _ready() -> void:
@@ -65,7 +74,38 @@ func show_privacy_options() -> void:
 	)
 
 
-## Loads one rewarded ad, shows it and frees it. Awaitable.
+## Starts loading one rewarded ad to keep ready, if there isn't one already.
+## iOS only: in the editor, initializing the mock SDK early breaks quitting.
+func preload_rewarded_ad() -> void:
+	if OS.get_name() != "iOS":
+		return
+	_preload_wanted = true
+	if _is_preloading or _is_busy or _take_preloaded_ad(false) != null:
+		return
+	if not _is_initialized:
+		return # _initialize_sdk() starts the preload once the SDK is ready.
+
+	_is_preloading = true
+	var ad: RewardedAd = await _load_rewarded_ad()
+	_is_preloading = false
+	if ad != null:
+		if _preload_wanted:
+			_preloaded_ad = ad
+			_preloaded_at_msec = Time.get_ticks_msec()
+		else:
+			ad.destroy() # The run ended while it was loading.
+	_preload_finished.emit()
+
+
+## Drops the preloaded ad (or the one still loading) when no revive is possible.
+func discard_preloaded_ad() -> void:
+	_preload_wanted = false
+	var ad := _take_preloaded_ad(true)
+	if ad != null:
+		ad.destroy()
+
+
+## Shows the preloaded ad, or loads one on the spot, then frees it. Awaitable.
 func show_rewarded_ad() -> Result:
 	if not is_supported() or _is_busy:
 		return Result.FAILED
@@ -79,7 +119,11 @@ func show_rewarded_ad() -> Result:
 		)
 		await initialization_finished
 
-	var ad: RewardedAd = await _load_rewarded_ad()
+	if _is_preloading:
+		await _preload_finished
+	var ad := _take_preloaded_ad(true)
+	if ad == null:
+		ad = await _load_rewarded_ad()
 	if ad == null:
 		_is_busy = false
 		return Result.FAILED
@@ -88,6 +132,21 @@ func show_rewarded_ad() -> Result:
 	ad.destroy()
 	_is_busy = false
 	return result
+
+
+## Returns the preloaded ad if it is still fresh (dropping a stale one).
+## With take = true the caller owns it from then on.
+func _take_preloaded_ad(take: bool) -> RewardedAd:
+	if _preloaded_ad == null:
+		return null
+	if Time.get_ticks_msec() - _preloaded_at_msec > PRELOAD_MAX_AGE_MSEC:
+		_preloaded_ad.destroy()
+		_preloaded_ad = null
+		return null
+	var ad := _preloaded_ad
+	if take:
+		_preloaded_ad = null
+	return ad
 
 
 func _gather_consent_then_initialize() -> void:
@@ -134,6 +193,8 @@ func _initialize_sdk() -> void:
 		_is_initialized = true
 		_is_initializing = false
 		initialization_finished.emit()
+		if _preload_wanted:
+			preload_rewarded_ad()
 	MobileAds.initialize(listener)
 
 
