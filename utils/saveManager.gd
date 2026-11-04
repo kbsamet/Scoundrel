@@ -7,9 +7,10 @@ const SETTINGS_PATH = "user://save.cfg"
 const TUTORIAL_PATH = "user://tutorial.cfg"
 
 static func save_score(score: int) -> void:
-	var config := ConfigFile.new()
+	# save.cfg also holds settings and the active run; load it so they survive.
+	var config := _load_config(SAVE_PATH)
 	config.set_value("data", "high_score", score)
-	config.save("user://save.cfg")
+	config.save(SAVE_PATH)
 
 static func load_score() -> int:
 	var config := ConfigFile.new()
@@ -71,6 +72,9 @@ static func load_settings() -> Dictionary:
 		"anim_speed":       config.get_value("settings", "anim_speed",        0) 
 	}
 static func save_run(game_scene: GameScene) -> void:
+	# A dead player has no run to resume (they may still be deciding on a revive ad).
+	if Game.health <= 0:
+		return
 	print("starting save")
 	var config := _load_config(SAVE_PATH)
 	config.set_value("run", "active", true)
@@ -80,6 +84,7 @@ static func save_run(game_scene: GameScene) -> void:
 	config.set_value("run", "held_weapon_monster_amt",   Game.held_weapon_monster_amt)
 	config.set_value("run", "difficulty",                Game.difficulty)
 	config.set_value("run", "potion_used",               Game.potion_used)
+	config.set_value("run", "revives_used",              Game.revives_used)
 	print("saved run info")
 	var held_card_data : Array = []
 	var held_card := game_scene.held_card
@@ -123,8 +128,9 @@ static func load_run(game_scene: GameScene) -> bool:
 	Game.flee_available          = config.get_value("run", "flee_available",          true)
 	Game.held_weapon_max_dmg     = config.get_value("run", "held_weapon_max_dmg",     INF)
 	Game.held_weapon_monster_amt = config.get_value("run", "held_weapon_monster_amt", 0)
-	Game.held_weapon_monster_amt = config.get_value("run", "difficulty", "Standard")
-	Game.held_weapon_monster_amt = config.get_value("run", "potion_used", false)
+	Game.difficulty              = config.get_value("run", "difficulty",              "Standard")
+	Game.potion_used             = config.get_value("run", "potion_used",             false)
+	Game.revives_used            = config.get_value("run", "revives_used",            0)
 
 	# ── Deck ───────────────────────────────────────
 	var deck_data : Array = config.get_value("run", "deck", [])

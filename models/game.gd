@@ -1,5 +1,7 @@
 extends Node
 const MAX_DECK_COUNT = 44
+const MAX_REVIVES := 3
+const REVIVE_HEALTH := 10
 
 var health := 20
 var deck : Array[Card] = []
@@ -11,6 +13,7 @@ var game_state := GameState.ANIMATING
 var fast_mode := false
 var difficulty := "Beginner"
 var potion_used := false
+var revives_used := 0
 
 enum GameState {ANIMATING,PLAYING}
 
@@ -35,6 +38,7 @@ func reset() -> void:
 	held_weapon_max_dmg = INF
 	held_weapon_monster_amt = 0
 	game_state = GameState.ANIMATING
+	revives_used = 0
 	high_score = SaveManager.load_score()
 	for i in range(2,15):
 		for k in range(0,4):
@@ -87,10 +91,18 @@ func heal(amt: int) -> void:
 func take_damage(amt : int) -> void:
 	health -= amt
 
+func can_revive() -> bool:
+	return revives_used < MAX_REVIVES
+
+func revive() -> void:
+	revives_used += 1
+	health = REVIVE_HEALTH
+
 func load_from(game : Game) -> void:
 	health = game.health
 	deck = game.deck
 	flee_available = game.flee_available
 	held_weapon_max_dmg = game.held_weapon_max_dmg
 	held_weapon_monster_amt = game.held_weapon_monster_amt
+	revives_used = game.revives_used
 	fast_mode = SaveManager.load_settings()["anim_speed"] == 1

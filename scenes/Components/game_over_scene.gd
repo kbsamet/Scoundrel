@@ -1,5 +1,11 @@
 extends Control
 class_name GameOverScene
+
+## Emitted once the player has watched a rewarded ad and earned a revive.
+signal revived
+
+## How far New Run / Main Menu move down to make room for the Revive button.
+const REVIVE_BUTTON_SHIFT := 132.0
 @onready var transition: ColorRect = $Transition
 
 @onready var label: Label = $Label
@@ -8,6 +14,7 @@ class_name GameOverScene
 @onready var shader_rect: ColorRect = $ShaderRect
 @onready var new_run_button: Button = $NewRunButton
 @onready var main_menu_button: Button = $MainMenuButton
+@onready var revive_button: Button = $ReviveButton
 @onready var high_score_text: Label = $VBoxContainer/HBoxContainer2/HighScoreText
 @onready var new_difficulty_label: Label = $VBoxContainer/NewDifficultyLabel
 
@@ -16,9 +23,15 @@ class_name GameOverScene
 var gameScene : PackedScene = load("res://scenes/Screens/DifficultySelectScreen.tscn")
 var mainMenuScene : PackedScene = load("res://scenes/Screens/MainMenuScreen.tscn")
 
+var _transition_tween : Tween
+var _buttons_shifted := false
 
 
-func set_data(won: bool, score: int) -> void:
+func set_data(won: bool, score: int, allow_revive: bool = false) -> void:
+	_set_revive_available(
+		not won and allow_revive and AdManager.is_supported() and Game.can_revive()
+	)
+
 	if won:
 		label.text = "Victorious"
 		label.label_settings.font_color = Color("c9a060")
@@ -49,7 +62,9 @@ func set_data(won: bool, score: int) -> void:
 	score_label.text = str(score)
 
 	if score >= Game.high_score:
-		SaveManager.save_score(score)
+		# A revived run can die again with a lower score; keep the best one saved.
+		if score > SaveManager.load_score():
+			SaveManager.save_score(score)
 		high_score_text.text = "Previous High Score:"
 		new_high_score_label.visible = true
 
@@ -57,12 +72,56 @@ func set_data(won: bool, score: int) -> void:
 	var accent_dim := Color("2e2010") if won else Color("2a0808")
 	_style_buttons(accent, accent_dim)
 
-	var tween := create_tween()
-	tween.tween_property(transition, "modulate:a", 0, 2)
+	_transition_tween = create_tween()
+	_transition_tween.tween_property(transition, "modulate:a", 0, 2)
+
+## Hides the screen and puts it back in its initial state for the next death.
+func close_for_revive() -> void:
+	visible = false
+	if _transition_tween:
+		_transition_tween.kill()
+	transition.modulate.a = 1
+	new_high_score_label.visible = false
+	high_score_text.text = "High Score:"
+	_set_revive_available(false)
+
+func _set_revive_available(available: bool) -> void:
+	revive_button.visible = available
+	revive_button.disabled = false
+	_update_revive_text()
+	if available == _buttons_shifted:
+		return
+	_buttons_shifted = available
+	var shift := REVIVE_BUTTON_SHIFT if available else -REVIVE_BUTTON_SHIFT
+	for btn : Button in [new_run_button, main_menu_button]:
+		btn.offset_top += shift
+		btn.offset_bottom += shift
+
+func _update_revive_text() -> void:
+	revive_button.text = tr("revive_button") % (Game.MAX_REVIVES - Game.revives_used)
+
+func _set_buttons_disabled(is_disabled: bool) -> void:
+	for btn : Button in [revive_button, new_run_button, main_menu_button]:
+		btn.disabled = is_disabled
+
+func _on_revive_button_pressed() -> void:
+	if AdManager.is_busy():
+		return
+	_set_buttons_disabled(true)
+	revive_button.text = tr("revive_loading")
+	var result := await AdManager.show_rewarded_ad()
+	_set_buttons_disabled(false)
+	match result:
+		AdManager.Result.REWARDED:
+			revived.emit()
+		AdManager.Result.FAILED:
+			revive_button.text = tr("revive_unavailable")
+		_:
+			_update_revive_text()
 
 func _style_buttons(accent: Color, accent_dim: Color) -> void:
-	for btn : Button in [new_run_button, main_menu_button]:
-		var is_primary := btn == new_run_button
+	for btn : Button in [revive_button, new_run_button, main_menu_button]:
+		var is_primary := btn != main_menu_button
 
 		var normal := StyleBoxFlat.new()
 		normal.bg_color = accent_dim 
@@ -82,7 +141,7 @@ func _style_buttons(accent: Color, accent_dim: Color) -> void:
 		var pressed := normal.duplicate() as StyleBoxFlat
 		pressed.bg_color = accent_dim.lightened(0.05)
 
-		for state : String in ["normal", "hover", "pressed", "focus"]:
+		for state : String in ["normal", "hover", "pressed", "focus", "disabled"]:
 			btn.add_theme_stylebox_override(state,
 				normal if state == "normal" else
 				hover if state == "hover" else
@@ -94,6 +153,12 @@ func _style_buttons(accent: Color, accent_dim: Color) -> void:
 		for font_state : String in ["font_color", "font_hover_color", "font_pressed_color",
 				"font_focus_color", "font_hover_pressed_color"]:
 			btn.add_theme_color_override(font_state, font_color)
+		btn.add_theme_color_override("font_disabled_color", font_color.darkened(0.4))
+
+		for icon_state : String in ["icon_normal_color", "icon_hover_color", "icon_pressed_color",
+				"icon_focus_color", "icon_hover_pressed_color"]:
+			btn.add_theme_color_override(icon_state, font_color)
+		btn.add_theme_color_override("icon_disabled_color", font_color.darkened(0.4))
 
 func set_tutorial_done() -> void:
 	label.text = "Tutorial Completed"

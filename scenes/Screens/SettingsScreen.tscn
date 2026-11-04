@@ -274,6 +274,34 @@ theme_override_fonts/font = SubResource("FontVariation_orx07")
 theme_override_font_sizes/font_size = 32
 text = "Fast"
 
+[node name="PrivacySpacer" type="Control" parent="Panel/MarginContainer/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="PrivacyRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/PrivacyRow"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_85e70")
+theme_override_font_sizes/font_size = 64
+text = "Ad Privacy"
+label_settings = SubResource("LabelSettings_f8b4w")
+
+[node name="Control" type="Control" parent="Panel/MarginContainer/VBoxContainer/PrivacyRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PrivacyButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/PrivacyRow"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_orx07")
+theme_override_font_sizes/font_size = 32
+text = "Manage"
+
 [node name="Control2" type="Control" parent="Panel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
@@ -328,5 +356,6 @@ text = "Reset Save"
 [connection signal="value_changed" from="Panel/MarginContainer/VBoxContainer/HBoxContainer2/SFXSlider" to="." method="_on_sfx_slider_value_changed"]
 [connection signal="pressed" from="Panel/MarginContainer/VBoxContainer/HBoxContainer3/NormalSpeedButton" to="." method="_on_normal_speed_button_pressed"]
 [connection signal="pressed" from="Panel/MarginContainer/VBoxContainer/HBoxContainer3/FastSpeedButton" to="." method="_on_fast_speed_button_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/VBoxContainer/PrivacyRow/PrivacyButton" to="." method="_on_privacy_button_pressed"]
 [connection signal="pressed" from="Panel/MarginContainer/VBoxContainer/HBoxContainer4/Abandon Run" to="." method="_on_abandon_run_pressed"]
 [connection signal="pressed" from="Panel/MarginContainer/VBoxContainer/HBoxContainer4/Reset Save" to="." method="_on_reset_save_pressed"]

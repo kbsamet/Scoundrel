@@ -7,6 +7,9 @@ class_name SettingsScreen
 @onready var fast_btn: Button = $Panel/MarginContainer/VBoxContainer/HBoxContainer3/FastSpeedButton
 @onready var reset_save: Button = $"Panel/MarginContainer/VBoxContainer/HBoxContainer4/Reset Save"
 @onready var abandon_run: Button = $"Panel/MarginContainer/VBoxContainer/HBoxContainer4/Abandon Run"
+@onready var privacy_row: HBoxContainer = $Panel/MarginContainer/VBoxContainer/PrivacyRow
+@onready var privacy_spacer: Control = $Panel/MarginContainer/VBoxContainer/PrivacySpacer
+@onready var privacy_button: Button = $Panel/MarginContainer/VBoxContainer/PrivacyRow/PrivacyButton
 
 var main_menu_scene : PackedScene = load("res://scenes/Screens/MainMenuScreen.tscn")
 
@@ -22,7 +25,32 @@ func _ready() -> void:
 	_apply_to_ui()
 	if get_parent() is not GameScene:
 		abandon_run.visible = false
-	
+	_style_privacy_button()
+	_update_privacy_row()
+	AdManager.privacy_options_changed.connect(_update_privacy_row)
+	visibility_changed.connect(_update_privacy_row)
+
+## Google requires EEA/UK players to be able to change their ad consent.
+func _update_privacy_row() -> void:
+	var required := AdManager.is_privacy_options_required()
+	privacy_row.visible = required
+	privacy_spacer.visible = required
+
+func _style_privacy_button() -> void:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("#3a2a10")
+	style.border_color = Color("#8a6830")
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(2)
+	for state : String in ["normal", "focus", "hover", "pressed"]:
+		privacy_button.add_theme_stylebox_override(state, style)
+	for font_state : String in ["font_color", "font_focus_color", "font_pressed_color",
+			"font_hover_pressed_color", "font_hover_color"]:
+		privacy_button.add_theme_color_override(font_state, Color("#c9a878"))
+
+func _on_privacy_button_pressed() -> void:
+	AdManager.show_privacy_options()
+
 func _apply_to_ui() -> void:
 	sfx_slider.value = _settings["sfx_volume"]
 	sfx_level.text   = str(_settings["sfx_volume"])

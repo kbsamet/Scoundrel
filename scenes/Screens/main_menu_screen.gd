@@ -7,6 +7,9 @@ extends Control
 @onready var replay_tutorial_button: Button = $MarginContainer/VBoxContainer/HBoxContainer/ReplayTutorialButton
 
 var gameScene : PackedScene = load("res://scenes/Screens/DifficultySelectScreen.tscn")
+# TODO: replace with Popplin's real App Store link
+const POPPLIN_APP_STORE_URL := "https://apps.apple.com/app/apple-store/id6773328628?pt=125892042&ct=scoundrel&mt=8"
+
 var gamePlayScene : PackedScene = load("res://scenes/Screens/GameScene.tscn")
 
 func _ready() -> void:
@@ -54,3 +57,7 @@ func _on_replay_tutorial_button_pressed() -> void:
 	SaveManager.reset_tutorial()
 	Game.difficulty = "Beginner"
 	get_tree().change_scene_to_packed(gamePlayScene)
+
+
+func _on_popplin_banner_pressed() -> void:
+	OS.shell_open(POPPLIN_APP_STORE_URL)

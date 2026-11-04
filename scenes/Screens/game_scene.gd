@@ -40,6 +40,7 @@ const attack_button_scene = preload("res://scenes/Components/AttackButtonScene.t
 var selected_card := -1
 var game_loaded := false
 func _ready() -> void:
+	game_over_scene.revived.connect(_on_revived)
 	await get_tree().process_frame
 	settings_screen.close.connect(func() -> void: settings_screen.visible = false)
 	room_scene.discard_pile = discard_pile
@@ -459,10 +460,17 @@ func update_health(preview_health: int = -1) -> void:
 		Game.set_state(Game.GameState.ANIMATING)
 		tween.tween_callback(func() -> void: Game.set_state(Game.GameState.PLAYING))
 	if preview_health == -1 and Game.health <= 0:
+		var died_in_tutorial := TutorialManager.is_active()
 		SaveManager.clear_run()
 		TutorialManager.active = false
 		game_over_scene.visible = true
-		game_over_scene.set_data(false, Game.calculate_score(false))
+		game_over_scene.set_data(false, Game.calculate_score(false), not died_in_tutorial)
+
+func _on_revived() -> void:
+	Game.revive()
+	game_over_scene.close_for_revive()
+	update_health()
+	SaveManager.save_run(self)
 		
 
 

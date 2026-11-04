@@ -8,6 +8,10 @@
 
 config_version=5
 
+[admob]
+
+general/ios/app_id="ca-app-pub-7674772196735378~7225096235"
+
 [application]
 
 config/name="Scoundrel"
@@ -22,6 +26,7 @@ config/icon="uid://sfvfcs2na411"
 
 Game="*res://models/game.gd"
 TutorialManager="*res://scenes/Screens/tutorial_manager.gd"
+AdManager="*res://utils/ad_manager.gd"
 
 [debug]
 
@@ -35,6 +40,10 @@ window/size/resizable=false
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=1
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/admob/plugin.cfg")
 
 [input_devices]
 

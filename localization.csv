@@ -54,3 +54,9 @@ tutorial_done,Defeat all the cards in the deck to win.\nGood luck.,Kazanmak içi
 20 Health,20 Health,20 Can
 Tutorial Completed,Tutorial Completed,Rehber Tamamlandı
 Click restart to start the real run.,Click restart to start the real run.,Gerçek oyunu başlatmak için yeniden başlatmaya tıklayın.
+Check out my new game: Popplin!,Check out my new game: Popplin!,Yeni oyunum Popplin'e göz at!
+revive_button,Revive (%d left),Diril (%d hak kaldı)
+revive_loading,Loading ad...,Reklam yükleniyor...
+revive_unavailable,No ad available. Try again,Reklam bulunamadı. Tekrar dene
+Ad Privacy,Ad Privacy,Reklam Gizliliği
+Manage,Manage,Yönet
