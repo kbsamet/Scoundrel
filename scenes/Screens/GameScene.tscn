@@ -282,6 +282,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
 mouse_filter = 2
 
 [node name="PilesRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
@@ -385,6 +386,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 1.4
 mouse_filter = 2
 
 [node name="WeaponHeader" type="Label" parent="MarginContainer/VBoxContainer"]
