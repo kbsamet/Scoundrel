@@ -32,7 +32,7 @@ corner_radius_bottom_right = 999
 corner_radius_bottom_left = 999
 
 [node name="DifficultyOptionScene" type="Panel"]
-custom_minimum_size = Vector2(890, 350)
+custom_minimum_size = Vector2(890, 320)
 anchors_preset = -1
 anchor_right = 0.756
 anchor_bottom = 0.147

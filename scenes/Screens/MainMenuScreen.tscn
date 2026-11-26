@@ -134,6 +134,16 @@ corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
+[sub_resource type="LabelSettings" id="LabelSettings_sub"]
+font = SubResource("FontVariation_rkgs0")
+font_size = 48
+font_color = Color(0.541176, 0.407843, 0.282353, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_best"]
+font = SubResource("FontVariation_rkgs0")
+font_size = 48
+font_color = Color(0.788235, 0.627451, 0.376471, 1)
+
 [node name="MainMenuScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -166,7 +176,7 @@ theme_override_constants/margin_bottom = 200
 layout_mode = 2
 
 [node name="Control" type="Control" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 300)
+custom_minimum_size = Vector2(0, 220)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
@@ -175,10 +185,38 @@ text = "Scoundrel"
 label_settings = SubResource("LabelSettings_b1bc4")
 horizontal_alignment = 1
 
+[node name="Subtitle" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "menu_subtitle"
+label_settings = SubResource("LabelSettings_sub")
+horizontal_alignment = 1
+
 [node name="Control2" type="Control" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="CardFan" type="Control" parent="MarginContainer/VBoxContainer/Control2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BestLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Best 0"
+label_settings = SubResource("LabelSettings_best")
+horizontal_alignment = 1
+
+[node name="Control5" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+mouse_filter = 2
 
 [node name="ContinueRunButton" type="Button" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(600, 180)

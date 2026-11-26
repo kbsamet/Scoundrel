@@ -60,3 +60,11 @@ revive_loading,Loading ad...,Reklam yükleniyor...
 revive_unavailable,No ad available. Try again,Reklam bulunamadı. Tekrar dene
 Ad Privacy,Ad Privacy,Reklam Gizliliği
 Manage,Manage,Yönet
+hud_deck,Deck,Deste
+hud_discard,Discard,Atılanlar
+hud_weapon,Weapon,Silah
+hud_bare_hands,Bare Hands,Çıplak Eller
+hud_any_foe,Any Foe,Her Düşman
+hud_slays_up_to,Slays ≤ %d,≤ %d Keser
+hud_best,Best,En İyi
+menu_subtitle,A Roguelike Card Game,Bir Roguelike Kart Oyunu

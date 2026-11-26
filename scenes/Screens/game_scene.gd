@@ -1,32 +1,32 @@
 extends Control
 class_name GameScene
 
-@onready var room_scene: RoomScene = $MarginContainer/VBoxContainer/RoomScene
-@onready var held_card: Panel = $MarginContainer/VBoxContainer/HBoxContainer3/HeldCard
+@onready var room_scene: RoomScene = $MarginContainer/VBoxContainer/RoomPanel/RoomScene
+@onready var held_card: Panel = $MarginContainer/VBoxContainer/BottomRow/WeaponSlot/HeldCard
 const CardSceneScene := preload("res://scenes/Components/CardScene.tscn")
-@onready var health_panel: Panel = $MarginContainer/VBoxContainer/HealthPanel
-@onready var health_label: Label = $MarginContainer/VBoxContainer/HealthPanel/HealthLabel
-@onready var health_rect: ColorRect = $MarginContainer/VBoxContainer/HealthPanel/HealthRect
-@onready var ghost_rect: ColorRect = $MarginContainer/VBoxContainer/HealthPanel/GhostRect
+@onready var health_panel: Panel = $MarginContainer/VBoxContainer/TopBar/HealthPanel
+@onready var health_label: Label = $MarginContainer/VBoxContainer/TopBar/HealthPanel/HealthLabel
+@onready var health_rect: ColorRect = $MarginContainer/VBoxContainer/TopBar/HealthPanel/HealthRect
+@onready var ghost_rect: ColorRect = $MarginContainer/VBoxContainer/TopBar/HealthPanel/GhostRect
 
 @onready var game_over_scene: GameOverScene = $GameOverScene
 
-@onready var disabled_panel: Panel = $MarginContainer/VBoxContainer/HBoxContainer3/FleeButton/DisabledPanel
-@onready var texture_container: Control = $MarginContainer/VBoxContainer/HealthPanel/TextureContainer
-@onready var flee_outer_panel: Panel = $MarginContainer/VBoxContainer/HBoxContainer3/FleeButton/FleeOuterPanel
+@onready var disabled_panel: Panel = $MarginContainer/VBoxContainer/BottomRow/FleeButton/DisabledPanel
+@onready var texture_container: Control = $MarginContainer/VBoxContainer/TopBar/HealthPanel/TextureContainer
+@onready var flee_outer_panel: Panel = $MarginContainer/VBoxContainer/BottomRow/FleeButton/FleeOuterPanel
 
-@onready var flee_tooltip: Tooltip = $MarginContainer/VBoxContainer/HBoxContainer3/FleeButton/FleeTooltip
-@onready var deck_tooltip: Tooltip = $MarginContainer/VBoxContainer/HBoxContainer2/Deck/DeckTooltip
+@onready var flee_tooltip: Tooltip = $MarginContainer/VBoxContainer/BottomRow/FleeButton/FleeTooltip
+@onready var deck_tooltip: Tooltip = $MarginContainer/VBoxContainer/PilesRow/DeckColumn/Deck/DeckTooltip
 
 @onready var run_player: AudioStreamPlayer = $runPlayer
 
-@onready var settings_button: TextureButton = $MarginContainer/VBoxContainer/HBoxContainer/SettingsButton
+@onready var settings_button: TextureButton = $MarginContainer/VBoxContainer/TopBar/SettingsButton
 @onready var settings_screen: SettingsScreen = $SettingsScreen
 @onready var tranistion_shader: ColorRect = $TranistionShader
 
-@onready var deck: TextureRect = $MarginContainer/VBoxContainer/HBoxContainer2/Deck
-@onready var flee_button: Button = $MarginContainer/VBoxContainer/HBoxContainer3/FleeButton
-@onready var discard_pile: Panel = $MarginContainer/VBoxContainer/HBoxContainer3/DiscardPile
+@onready var deck: TextureRect = $MarginContainer/VBoxContainer/PilesRow/DeckColumn/Deck
+@onready var flee_button: Button = $MarginContainer/VBoxContainer/BottomRow/FleeButton
+@onready var discard_pile: Panel = $MarginContainer/VBoxContainer/PilesRow/DiscardColumn/DiscardPile
 
 
 @onready var punch_player: AudioStreamPlayer = $PunchPlayer
@@ -35,12 +35,30 @@ const CardSceneScene := preload("res://scenes/Components/CardScene.tscn")
 @onready var drink_player: AudioStreamPlayer = $DrinkPlayer
 @onready var tranistion: ColorRect = $Tranistion
 
+@onready var margin_container: MarginContainer = $MarginContainer
+@onready var deck_header: Label = $MarginContainer/VBoxContainer/PilesRow/DeckColumn/DeckHeader
+@onready var discard_header: Label = $MarginContainer/VBoxContainer/PilesRow/DiscardColumn/DiscardHeader
+@onready var weapon_header: Label = $MarginContainer/VBoxContainer/WeaponHeader
+@onready var difficulty_label: Label = $MarginContainer/VBoxContainer/InfoRow/DifficultyLabel
+@onready var best_label: Label = $MarginContainer/VBoxContainer/InfoRow/BestLabel
+@onready var sword_ghost: TextureRect = $MarginContainer/VBoxContainer/BottomRow/WeaponSlot/SwordGhost
+
+const DIFFICULTY_STYLE := {
+	"Beginner": [1, Color("#6ab85a")],
+	"Standard": [2, Color("#c9a060")],
+	"Veteran": [3, Color("#e0a040")],
+	"Condemned": [4, Color("#c43030")],
+}
+const HEADER_COLOR := Color(0.541176, 0.407843, 0.282353)
+const HEADER_WARN_COLOR := Color(0.78, 0.36, 0.26)
+
 
 const attack_button_scene = preload("res://scenes/Components/AttackButtonScene.tscn")
 var selected_card := -1
 var game_loaded := false
 func _ready() -> void:
 	game_over_scene.revived.connect(_on_revived)
+	_apply_safe_area()
 	await get_tree().process_frame
 	settings_screen.close.connect(func() -> void: settings_screen.visible = false)
 	room_scene.discard_pile = discard_pile
@@ -57,6 +75,7 @@ func _ready() -> void:
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), true)
 		await SaveManager.load_run(self)
 		update_health()
+		update_hud()
 		_update_revive_ad_preload()
 		set_flee_disabled(!Game.flee_available)
 		await get_tree().create_timer(0.5).timeout
@@ -64,6 +83,8 @@ func _ready() -> void:
 		room_scene.deck_position = deck.global_position
 		return
 	Game.reset()
+	update_health()
+	update_hud()
 	set_flee_disabled(false)
 	set_flee_button_panels()
 	if !SaveManager.has_seen_tutorial():
@@ -157,6 +178,7 @@ func make_card_move(id : int, secondary_attack : bool = false) -> void:
 		card_scene.global_position = room_scene.card_slots[id].global_position
 		card_scene.setup(card,-1)
 		animate_move_to_held(card_scene,Vector2.ZERO)
+		update_hud()
 
 	elif id_card.type == Card.card_type.POTION:
 		drink_player.play()
@@ -326,6 +348,7 @@ func animate_draw_to_slot(slot: int, card: Card) -> void:
 	
 	card_scene.setup(card, slot)
 	card_scene.card_audio_player.play()
+	update_hud()
 	
 	card_scene.global_position = deck.global_position
 	card_scene.size = card_scene.custom_minimum_size
@@ -399,8 +422,11 @@ func discard_held_card() -> void:
 	
 	Game.held_weapon_max_dmg = INF
 	Game.held_weapon_monster_amt = 0
+	update_hud()
 
 func update_health(preview_health: int = -1) -> void:
+	if preview_health == -1:
+		update_hud()
 
 	health_label.text = str(Game.health) + " / 20"
 
@@ -589,3 +615,44 @@ func _on_settings_button_button_up() -> void:
 func _on_settings_button_pressed() -> void:
 	settings_screen.visible = true
 	SaveManager.save_run(self)
+
+
+## Keeps the HUD clear of the notch / home indicator on phones.
+func _apply_safe_area() -> void:
+	if not OS.has_feature("mobile"):
+		return
+	var window_size := DisplayServer.window_get_size()
+	if window_size.y <= 0:
+		return
+	var safe := DisplayServer.get_display_safe_area()
+	var to_viewport := get_viewport_rect().size.y / float(window_size.y)
+	var top_inset := safe.position.y * to_viewport
+	var bottom_inset := (window_size.y - safe.end.y) * to_viewport
+	margin_container.add_theme_constant_override("margin_top", int(max(90.0, top_inset + 24.0)))
+	margin_container.add_theme_constant_override("margin_bottom", int(max(140.0, bottom_inset + 110.0)))
+
+## Refreshes the labels around the table: deck count, weapon reach, difficulty, best score.
+func update_hud() -> void:
+	deck_header.text = tr("hud_deck") + " · " + str(Game.deck.size())
+	discard_header.text = tr("hud_discard")
+
+	var style : Array = DIFFICULTY_STYLE.get(Game.difficulty, [1, HEADER_COLOR])
+	difficulty_label.text = tr(Game.difficulty) + "  " + "•".repeat(style[0])
+	difficulty_label.label_settings = difficulty_label.label_settings.duplicate()
+	difficulty_label.label_settings.font_color = (style[1] as Color).darkened(0.15)
+	best_label.text = tr("hud_best") + " " + str(Game.high_score)
+	best_label.visible = Game.high_score > 0
+
+	var has_weapon := held_card.get_child_count() > 0
+	sword_ghost.visible = not has_weapon
+	var weapon_color := HEADER_COLOR
+	if not has_weapon:
+		weapon_header.text = tr("hud_bare_hands")
+	elif Game.held_weapon_max_dmg == INF:
+		weapon_header.text = tr("hud_weapon") + " · " + tr("hud_any_foe")
+	else:
+		weapon_header.text = tr("hud_weapon") + " · " + (tr("hud_slays_up_to") % int(Game.held_weapon_max_dmg))
+		if Game.held_weapon_max_dmg <= 4:
+			weapon_color = HEADER_WARN_COLOR
+	weapon_header.label_settings = weapon_header.label_settings.duplicate()
+	weapon_header.label_settings.font_color = weapon_color

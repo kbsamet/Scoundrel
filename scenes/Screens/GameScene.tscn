@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://cafaeua3q5u4k"]
+[gd_scene load_steps=40 format=3 uid="uid://cafaeua3q5u4k"]
 
 [ext_resource type="Script" uid="uid://ctinpnkkwpm35" path="res://scenes/Screens/game_scene.gd" id="1_ax3qu"]
 [ext_resource type="Texture2D" uid="uid://d21u3jweb48bc" path="res://sprites/wood.jpg" id="2_ax3qu"]
@@ -22,6 +22,9 @@
 [ext_resource type="Texture2D" uid="uid://gr677hha0yi1" path="res://sprites/cog.png" id="21_k66q7"]
 [ext_resource type="PackedScene" uid="uid://cetbw7vn2uyy3" path="res://scenes/Screens/SettingsScreen.tscn" id="22_gqjwc"]
 [ext_resource type="Material" uid="uid://t0w5fyr6ph80" path="res://themes/TransitionScene.tres" id="22_tm2ni"]
+
+[ext_resource type="Texture2D" uid="uid://b51u127nn6pb8" path="res://sprites/heart.png" id="23_heart"]
+[ext_resource type="Texture2D" uid="uid://bgfac8407xkcf" path="res://sprites/sword.png" id="24_sword"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tlyhp"]
 shader = ExtResource("2_hqe0l")
@@ -97,6 +100,40 @@ corner_radius_top_right = 999
 corner_radius_bottom_right = 999
 corner_radius_bottom_left = 999
 
+[sub_resource type="FontVariation" id="FontVariation_hdr"]
+base_font = ExtResource("16_qv8uk")
+spacing_glyph = 4
+
+[sub_resource type="LabelSettings" id="LabelSettings_hdr"]
+font = SubResource("FontVariation_hdr")
+font_size = 40
+font_color = Color(0.541176, 0.407843, 0.282353, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_info"]
+font = SubResource("FontVariation_hdr")
+font_size = 40
+font_color = Color(0.4, 0.33, 0.26, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_table"]
+content_margin_left = 21.0
+content_margin_top = 28.0
+content_margin_right = 21.0
+content_margin_bottom = 28.0
+bg_color = Color(0.2, 0.07, 0.065, 0.55)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.36, 0.22, 0.14, 0.9)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 30
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_held"]
+
 [node name="GameScene" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -121,40 +158,28 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 60
+theme_override_constants/margin_left = 40
 theme_override_constants/margin_top = 90
-theme_override_constants/margin_right = 60
-theme_override_constants/margin_bottom = 300
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 140
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 mouse_filter = 2
+theme_override_constants/separation = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="TopBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 28
 
-[node name="HealthLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Health"
-label_settings = SubResource("LabelSettings_gr1j8")
-
-[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="HealthPanel" type="Panel" parent="MarginContainer/VBoxContainer/TopBar"]
+custom_minimum_size = Vector2(0, 104)
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="SettingsButton" type="TextureButton" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(78, 78)
-layout_mode = 2
-texture_normal = ExtResource("21_k66q7")
-ignore_texture_size = true
-stretch_mode = 4
-
-[node name="HealthPanel" type="Panel" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(894, 116)
-layout_mode = 2
 theme_override_styles/panel = ExtResource("4_yd5jp")
 
-[node name="HealthRect" type="ColorRect" parent="MarginContainer/VBoxContainer/HealthPanel"]
+[node name="HealthRect" type="ColorRect" parent="MarginContainer/VBoxContainer/TopBar/HealthPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -167,16 +192,16 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.701961, 0.121569, 0.156863, 1)
 
-[node name="TextureContainer" type="Control" parent="MarginContainer/VBoxContainer/HealthPanel"]
+[node name="TextureContainer" type="Control" parent="MarginContainer/VBoxContainer/TopBar/HealthPanel"]
 clip_children = 2
 clip_contents = true
 anchors_preset = 0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = 956.0
-offset_bottom = 112.0
+offset_right = 100.0
+offset_bottom = 100.0
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HealthPanel/TextureContainer"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/TopBar/HealthPanel/TextureContainer"]
 material = SubResource("ShaderMaterial_llxvm")
 layout_mode = 2
 offset_right = 951.0
@@ -184,50 +209,103 @@ offset_bottom = 108.0
 texture = SubResource("NoiseTexture2D_llxvm")
 stretch_mode = 2
 
-[node name="GhostRect" type="ColorRect" parent="MarginContainer/VBoxContainer/HealthPanel"]
+[node name="GhostRect" type="ColorRect" parent="MarginContainer/VBoxContainer/TopBar/HealthPanel"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 4.0
+offset_bottom = -4.0
+grow_vertical = 2
+color = Color(1, 0.42, 0.449, 0.301961)
+
+[node name="Heart" type="TextureRect" parent="MarginContainer/VBoxContainer/TopBar/HealthPanel"]
+modulate = Color(1, 0.86, 0.84, 0.92)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 26.0
+offset_top = -27.0
+offset_right = 80.0
+offset_bottom = 27.0
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("23_heart")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HealthLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar/HealthPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = -956.0
-offset_bottom = -4.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(1, 0.42, 0.449, 0.301961)
-
-[node name="HealthLabel" type="Label" parent="MarginContainer/VBoxContainer/HealthPanel"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -286.0
-offset_top = -26.5
-offset_right = 287.0
-offset_bottom = 26.5
 grow_horizontal = 2
 grow_vertical = 2
 text = "20 / 20"
 label_settings = SubResource("LabelSettings_7s5hy")
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Control" type="Control" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 86)
+[node name="SettingsButton" type="TextureButton" parent="MarginContainer/VBoxContainer/TopBar"]
+custom_minimum_size = Vector2(84, 84)
 layout_mode = 2
+size_flags_vertical = 4
+texture_normal = ExtResource("21_k66q7")
+ignore_texture_size = true
+stretch_mode = 4
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="InfoRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
+mouse_filter = 2
 
-[node name="Deck" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="DifficultyLabel" type="Label" parent="MarginContainer/VBoxContainer/InfoRow"]
+layout_mode = 2
+text = "Standard  ••"
+label_settings = SubResource("LabelSettings_hdr")
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/InfoRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="BestLabel" type="Label" parent="MarginContainer/VBoxContainer/InfoRow"]
+layout_mode = 2
+text = "Best 0"
+label_settings = SubResource("LabelSettings_info")
+vertical_alignment = 1
+
+[node name="Spacer1" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="PilesRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="DeckColumn" type="VBoxContainer" parent="MarginContainer/VBoxContainer/PilesRow"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 54
+
+[node name="DeckHeader" type="Label" parent="MarginContainer/VBoxContainer/PilesRow/DeckColumn"]
+layout_mode = 2
+text = "Deck · 44"
+label_settings = SubResource("LabelSettings_hdr")
+
+[node name="Deck" type="TextureRect" parent="MarginContainer/VBoxContainer/PilesRow/DeckColumn"]
 z_index = 3
 custom_minimum_size = Vector2(187, 262)
 layout_mode = 2
+size_flags_horizontal = 0
 texture = ExtResource("11_v6epn")
 
-[node name="Deck2" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer2/Deck"]
+[node name="Deck2" type="TextureRect" parent="MarginContainer/VBoxContainer/PilesRow/DeckColumn/Deck"]
 custom_minimum_size = Vector2(187, 262)
 layout_mode = 0
 offset_top = -9.0
@@ -235,7 +313,7 @@ offset_right = 187.0
 offset_bottom = 253.0
 texture = ExtResource("11_v6epn")
 
-[node name="Deck3" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer2/Deck"]
+[node name="Deck3" type="TextureRect" parent="MarginContainer/VBoxContainer/PilesRow/DeckColumn/Deck"]
 custom_minimum_size = Vector2(187, 262)
 layout_mode = 0
 offset_top = -18.0
@@ -243,7 +321,7 @@ offset_right = 187.0
 offset_bottom = 244.0
 texture = ExtResource("11_v6epn")
 
-[node name="Deck4" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer2/Deck"]
+[node name="Deck4" type="TextureRect" parent="MarginContainer/VBoxContainer/PilesRow/DeckColumn/Deck"]
 custom_minimum_size = Vector2(187, 262)
 layout_mode = 0
 offset_top = -27.0
@@ -251,7 +329,7 @@ offset_right = 187.0
 offset_bottom = 235.0
 texture = ExtResource("11_v6epn")
 
-[node name="Deck5" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer2/Deck"]
+[node name="Deck5" type="TextureRect" parent="MarginContainer/VBoxContainer/PilesRow/DeckColumn/Deck"]
 custom_minimum_size = Vector2(187, 262)
 layout_mode = 0
 offset_top = -36.0
@@ -259,7 +337,7 @@ offset_right = 187.0
 offset_bottom = 226.0
 texture = ExtResource("11_v6epn")
 
-[node name="DeckTooltip" parent="MarginContainer/VBoxContainer/HBoxContainer2/Deck" instance=ExtResource("9_qytwv")]
+[node name="DeckTooltip" parent="MarginContainer/VBoxContainer/PilesRow/DeckColumn/Deck" instance=ExtResource("9_qytwv")]
 layout_mode = 1
 offset_left = -12.0
 offset_top = -163.0
@@ -267,33 +345,100 @@ offset_right = 51.0
 offset_bottom = -322.0
 custom_y = -180
 
-[node name="Control2" type="Control" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/PilesRow"]
 layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
 
-[node name="RoomScene" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_tlyhp")]
+[node name="DiscardColumn" type="VBoxContainer" parent="MarginContainer/VBoxContainer/PilesRow"]
 layout_mode = 2
-size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_constants/separation = 54
 
-[node name="Control3" type="Control" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 460)
+[node name="DiscardHeader" type="Label" parent="MarginContainer/VBoxContainer/PilesRow/DiscardColumn"]
+layout_mode = 2
+text = "Discard"
+label_settings = SubResource("LabelSettings_hdr")
+horizontal_alignment = 2
+
+[node name="DiscardPile" type="Panel" parent="MarginContainer/VBoxContainer/PilesRow/DiscardColumn"]
+custom_minimum_size = Vector2(187, 262)
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_styles/panel = ExtResource("4_yd5jp")
+
+[node name="Spacer2" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="RoomPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_table")
+
+[node name="RoomScene" parent="MarginContainer/VBoxContainer/RoomPanel" instance=ExtResource("3_tlyhp")]
 layout_mode = 2
 
-[node name="HeldCard" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="Spacer3" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="WeaponHeader" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Bare Hands"
+label_settings = SubResource("LabelSettings_hdr")
+
+[node name="WeaponGap" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="BottomRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="WeaponSlot" type="Panel" parent="MarginContainer/VBoxContainer/BottomRow"]
 custom_minimum_size = Vector2(187, 262)
 layout_mode = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7s5hy")
 
-[node name="Control3" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="SwordGhost" type="TextureRect" parent="MarginContainer/VBoxContainer/BottomRow/WeaponSlot"]
+modulate = Color(0.55, 0.42, 0.3, 0.22)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = -48.0
+offset_right = 48.0
+offset_bottom = 48.0
+mouse_filter = 2
+texture = ExtResource("24_sword")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HeldCard" type="Panel" parent="MarginContainer/VBoxContainer/BottomRow/WeaponSlot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_held")
+
+[node name="Control3" type="Control" parent="MarginContainer/VBoxContainer/BottomRow"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 
-[node name="FleeButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="FleeButton" type="Button" parent="MarginContainer/VBoxContainer/BottomRow"]
 custom_minimum_size = Vector2(225, 225)
 layout_mode = 2
 size_flags_vertical = 4
@@ -307,7 +452,7 @@ theme_override_styles/hover = ExtResource("6_0y3wm")
 theme_override_styles/pressed = ExtResource("5_fwyns")
 theme_override_styles/normal = ExtResource("5_fwyns")
 
-[node name="FleeOuterPanel" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer3/FleeButton"]
+[node name="FleeOuterPanel" type="Panel" parent="MarginContainer/VBoxContainer/BottomRow/FleeButton"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -323,7 +468,7 @@ grow_vertical = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_0y3wm")
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer3/FleeButton/FleeOuterPanel"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/BottomRow/FleeButton/FleeOuterPanel"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -339,7 +484,7 @@ grow_vertical = 2
 texture = ExtResource("5_llxvm")
 expand_mode = 4
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer3/FleeButton/FleeOuterPanel"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/BottomRow/FleeButton/FleeOuterPanel"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -355,7 +500,7 @@ grow_vertical = 0
 text = "Flee"
 label_settings = SubResource("LabelSettings_qv8uk")
 
-[node name="DisabledPanel" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer3/FleeButton"]
+[node name="DisabledPanel" type="Panel" parent="MarginContainer/VBoxContainer/BottomRow/FleeButton"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -371,7 +516,7 @@ grow_vertical = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_qv8uk")
 
-[node name="FleeTooltip" parent="MarginContainer/VBoxContainer/HBoxContainer3/FleeButton" instance=ExtResource("9_qytwv")]
+[node name="FleeTooltip" parent="MarginContainer/VBoxContainer/BottomRow/FleeButton" instance=ExtResource("9_qytwv")]
 layout_mode = 1
 offset_left = 6.5
 offset_top = -90.0
@@ -379,14 +524,10 @@ offset_right = 31.5
 offset_bottom = -249.0
 custom_y = -120
 
-[node name="Control4" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="FleeRightPad" type="Control" parent="MarginContainer/VBoxContainer/BottomRow"]
+custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="DiscardPile" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer3"]
-custom_minimum_size = Vector2(187, 262)
-layout_mode = 2
-theme_override_styles/panel = ExtResource("4_yd5jp")
+mouse_filter = 2
 
 [node name="PunchPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_tlyhp")
@@ -450,10 +591,10 @@ visible = false
 layout_mode = 1
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
-[connection signal="button_down" from="MarginContainer/VBoxContainer/HBoxContainer/SettingsButton" to="." method="_on_settings_button_button_down"]
-[connection signal="button_up" from="MarginContainer/VBoxContainer/HBoxContainer/SettingsButton" to="." method="_on_settings_button_button_up"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
-[connection signal="gui_input" from="MarginContainer/VBoxContainer/HBoxContainer3/HeldCard" to="." method="_on_held_card_gui_input"]
-[connection signal="button_down" from="MarginContainer/VBoxContainer/HBoxContainer3/FleeButton" to="." method="_on_flee_button_button_down"]
-[connection signal="button_up" from="MarginContainer/VBoxContainer/HBoxContainer3/FleeButton" to="." method="_on_flee_button_button_up"]
+[connection signal="button_down" from="MarginContainer/VBoxContainer/TopBar/SettingsButton" to="." method="_on_settings_button_button_down"]
+[connection signal="button_up" from="MarginContainer/VBoxContainer/TopBar/SettingsButton" to="." method="_on_settings_button_button_up"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/TopBar/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="gui_input" from="MarginContainer/VBoxContainer/BottomRow/WeaponSlot/HeldCard" to="." method="_on_held_card_gui_input"]
+[connection signal="button_down" from="MarginContainer/VBoxContainer/BottomRow/FleeButton" to="." method="_on_flee_button_button_down"]
+[connection signal="button_up" from="MarginContainer/VBoxContainer/BottomRow/FleeButton" to="." method="_on_flee_button_button_up"]
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
